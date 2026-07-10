@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vendor Inventory Dashboard - TushMech</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-error": "#ffffff",
+                "error": "#ba1a1a",
+                "secondary-container": "#316bf3",
+                "surface-container-high": "#e6e8ea",
+                "on-secondary-fixed-variant": "#003ea8",
+                "surface-container-lowest": "#ffffff",
+                "primary": "#000000",
+                "on-tertiary-fixed-variant": "#005236",
+                "surface": "#f7f9fb",
+                "tertiary-container": "#002113",
+                "on-tertiary-container": "#009668",
+                "error-container": "#ffdad6",
+                "surface-dim": "#d8dadc",
+                "on-surface": "#191c1e",
+                "on-secondary-container": "#fefcff",
+                "inverse-surface": "#2d3133",
+                "secondary-fixed": "#dbe1ff",
+                "on-primary": "#ffffff",
+                "on-primary-container": "#76849f",
+                "tertiary": "#000000",
+                "secondary": "#2563EB",
+                "on-primary-fixed-variant": "#39475f",
+                "inverse-primary": "#b9c7e4",
+                "primary-container": "#0A192F",
+                "surface-container-low": "#f2f4f6",
+                "background": "#f7f9fb",
+                "surface-container": "#eceef0",
+                "surface-tint": "#112240",
+                "primary-fixed-dim": "#b9c7e4",
+                "on-secondary-fixed": "#00174b",
+                "surface-bright": "#f7f9fb",
+                "inverse-on-surface": "#eff1f3",
+                "primary-fixed": "#d6e3ff",
+                "on-tertiary-fixed": "#002113",
+                "on-primary-fixed": "#0d1c32",
+                "surface-container-highest": "#e0e3e5",
+                "on-error-container": "#93000a",
+                "tertiary-fixed": "#6ffbbe",
+                "surface-variant": "#e0e3e5",
+                "outline": "#75777e",
+                "on-background": "#191c1e",
+                "on-secondary": "#ffffff",
+                "on-surface-variant": "#44474d",
+                "secondary-fixed-dim": "#b4c5ff",
+                "tertiary-fixed-dim": "#4edea3",
+                "outline-variant": "#c5c6cd",
+                "on-tertiary": "#ffffff"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "gutter": "24px",
+                "unit": "8px",
+                "margin-mobile": "16px",
+                "margin-desktop": "40px",
+                "touch-target-min": "48px",
+                "container-max": "1280px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "headline-lg-mobile": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "body-md": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .shadow-level-1 { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
+        .shadow-level-2 { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03); }
+    </style>
+</head>
+<body class="bg-background text-on-surface h-screen flex overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-primary-container text-on-primary h-full hidden md:flex flex-col flex-shrink-0 z-20 shadow-level-2">
+<div class="p-6 border-b border-surface-tint/50 flex items-center gap-3">
+<img class="w-8 h-8 object-contain rounded" data-alt="TushMech Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmsFJcVudeUXXqXL13pfqyLI_JTtUjsDus-I9skWBcYQjFKWB_gzO7UGDOl-Oc8wNOlCn5jIsMxZKASlWghn5wjte3xfRML0BDBJ0gaZjYOVX7C8LZSFUoyGSEDLS0BBb40zX952GUjfFKeD3w9s5H6_LR0b7yban_khhDDaKWUi3KYLASOs3EXe_7P7kp27c6KmmUT7GpfvWkCewSpyg0S6GFCk1r7YFn1X8hix0xaKvspyrqczg_DppWvsQnlLeTju5ubKTq4E1X"/>
+<h1 class="font-headline-md text-headline-md text-on-primary tracking-tight">TushMech</h1>
+</div>
+<nav class="flex-1 py-6 flex flex-col gap-1 px-4">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-on-primary-container hover:bg-surface-tint hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">grid_view</span>
+<span class="font-label-md text-sm font-medium">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-on-primary-container hover:bg-surface-tint hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">map</span>
+<span class="font-label-md text-sm font-medium">Live Map</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md bg-secondary text-on-primary shadow-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-md text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-on-primary-container hover:bg-surface-tint hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">payments</span>
+<span class="font-label-md text-sm font-medium">Escrow Payouts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-md text-on-primary-container hover:bg-surface-tint hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">fact_check</span>
+<span class="font-label-md text-sm font-medium">QA Reports</span>
+</a>
+</nav>
+<div class="p-6 border-t border-surface-tint/50 flex items-center gap-3 hover:bg-surface-tint transition-colors cursor-pointer">
+<img class="w-9 h-9 rounded-full object-cover border-2 border-surface-tint" data-alt="A professional headshot of a female administrative manager in a clean, brightly lit corporate environment, wearing a sleek navy blazer over a crisp white blouse. The style is modern corporate photography with a shallow depth of field and soft, flattering lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc3vsqWVVVFdc2Ij3OVe37VvoUFHKtvykj8a1uy5R-923pkN1I6mE45cwqF8U9wxX9bdSrfUL-hr-EmWmwlJ7PHUlTSSlZCt0V5tbaFCc3Ysh7Pkz2oLa2UrKfIfIRVHEDnkogonVrPXPQFbLc7dYDlXDpc0xjWboYX5bSUhTWU4dOpC6p0KM_SSIQyDUT7n6fV1wFoDyTgMXZjhcom-_eTQqCPXac1DzyLE8eYjSihjPkLQDMQlSLvL47iz8OKzcoI9G0izRY-RG0"/>
+<div>
+<p class="font-label-md text-sm font-medium text-on-primary">Sarah Jenkins</p>
+<p class="font-label-sm text-xs text-on-primary-container">Vendor Relations</p>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background">
+<!-- Top App Bar (Mobile) -->
+<header class="md:hidden flex justify-between items-center px-4 h-16 w-full z-50 bg-surface-bright dark:bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 object-contain rounded" data-alt="TushMech Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmsFJcVudeUXXqXL13pfqyLI_JTtUjsDus-I9skWBcYQjFKWB_gzO7UGDOl-Oc8wNOlCn5jIsMxZKASlWghn5wjte3xfRML0BDBJ0gaZjYOVX7C8LZSFUoyGSEDLS0BBb40zX952GUjfFKeD3w9s5H6_LR0b7yban_khhDDaKWUi3KYLASOs3EXe_7P7kp27c6KmmUT7GpfvWkCewSpyg0S6GFCk1r7YFn1X8hix0xaKvspyrqczg_DppWvsQnlLeTju5ubKTq4E1X"/>
+<h1 class="font-headline-lg-mobile text-xl font-semibold text-primary">TushMech</h1>
+</div>
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A professional headshot of a female administrative manager in a clean, brightly lit corporate environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwUuJQc59iMXCuLodg8VqYWsZpATW3Apitea6x83ygC2Uj0SSmSN8GZonMNWmassdAfZWVOFplzgVd_g-tUJUBugt-VjhPc1EuspARMQ8lLWFxc9IyA634adZWwwrEQvlRLo8T-sPwFLP1medolVMERSVfJPsngHF1MI4zItaJa_KQjHsKCAKx5bSHyCssnR8w7-5LRr8MF71vdRUZLKSNzwDmgT5uyrkV1s3cIFoBD8d6AIGzu9gM8OB-HFaDtycGLkVMck9imXnM"/>
+</header>
+<div class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8">
+<!-- Header & Actions -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div>
+<h2 class="font-headline-lg text-2xl font-semibold text-on-surface tracking-tight">Vendor Inventory</h2>
+<p class="font-body-md text-sm text-on-surface-variant mt-1">Manage and track spare parts across all active vendors.</p>
+</div>
+<button class="flex items-center gap-2 px-4 h-10 bg-secondary text-white rounded-md font-label-md text-sm shadow-sm hover:bg-secondary/90 transition-colors">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+                    Upload CSV
+                </button>
+</div>
+<!-- KPI Cards (Bento Grid Style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-level-1 border border-outline-variant/30 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label-md text-sm font-medium text-on-surface-variant">Total Parts Sold</span>
+<div class="w-8 h-8 rounded-md bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[18px]">sell</span>
+</div>
+</div>
+<div class="font-display-lg text-3xl font-bold text-on-surface tracking-tight">12,482</div>
+<div class="font-label-sm text-xs font-medium text-emerald-600 mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+                        +14% from last month
+                    </div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-level-1 border border-outline-variant/30 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label-md text-sm font-medium text-on-surface-variant">Revenue in Escrow</span>
+<div class="w-8 h-8 rounded-md bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[18px]">account_balance</span>
+</div>
+</div>
+<div class="font-display-lg text-3xl font-bold text-on-surface tracking-tight">$142.5K</div>
+<div class="font-label-sm text-xs font-medium text-on-surface-variant mt-2">Pending clearance</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-level-1 border border-outline-variant/30 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label-md text-sm font-medium text-on-surface-variant">Active Orders</span>
+<div class="w-8 h-8 rounded-md bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[18px]">local_shipping</span>
+</div>
+</div>
+<div class="font-display-lg text-3xl font-bold text-on-surface tracking-tight">843</div>
+<div class="font-label-sm text-xs font-medium text-amber-600 mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span>
+                        24 require attention
+                    </div>
+</div>
+</div>
+<!-- Inventory Data Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-level-1 border border-outline-variant/30 overflow-hidden">
+<div class="p-4 border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-lowest">
+<h3 class="font-headline-md text-lg font-semibold text-on-surface">Current Stock</h3>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="pl-9 pr-4 py-2 rounded-md border border-outline-variant/50 bg-surface-container-lowest font-body-md text-sm focus:border-secondary focus:ring-1 focus:ring-secondary outline-none w-64 shadow-sm" placeholder="Search inventory..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/30 bg-surface-container-low/50">
+<th class="p-4 font-label-md text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Part Name</th>
+<th class="p-4 font-label-md text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Type</th>
+<th class="p-4 font-label-md text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Compatibility</th>
+<th class="p-4 font-label-md text-xs uppercase tracking-wider text-on-surface-variant font-semibold text-right">Price</th>
+<th class="p-4 font-label-md text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Stock Level</th>
+<th class="p-4 font-label-md text-xs uppercase tracking-wider text-on-surface-variant font-semibold text-center">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-sm divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer">
+<td class="p-4 font-medium text-on-surface">Brembo Brake Pads X1</td>
+<td class="p-4 text-on-surface-variant">OEM</td>
+<td class="p-4 text-on-surface-variant">Honda Civic, Accord</td>
+<td class="p-4 text-right text-on-surface font-medium">$85.00</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-24 bg-surface-variant rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 75%"></div>
+</div>
+<span class="font-label-sm text-xs text-on-surface-variant">150 / 200</span>
+</div>
+</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">In Stock</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer">
+<td class="p-4 font-medium text-on-surface">Bosch Spark Plug Iridium</td>
+<td class="p-4 text-on-surface-variant">Aftermarket</td>
+<td class="p-4 text-on-surface-variant">Universal</td>
+<td class="p-4 text-right text-on-surface font-medium">$12.50</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-24 bg-surface-variant rounded-full h-1.5">
+<div class="bg-error h-1.5 rounded-full" style="width: 15%"></div>
+</div>
+<span class="font-label-sm text-xs text-on-surface-variant">12 / 80</span>
+</div>
+</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Low Stock</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer">
+<td class="p-4 font-medium text-on-surface">Castrol Edge 5W-30 (5qt)</td>
+<td class="p-4 text-on-surface-variant">OEM</td>
+<td class="p-4 text-on-surface-variant">Universal</td>
+<td class="p-4 text-right text-on-surface font-medium">$28.99</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-24 bg-surface-variant rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 90%"></div>
+</div>
+<span class="font-label-sm text-xs text-on-surface-variant">450 / 500</span>
+</div>
+</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">In Stock</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer">
+<td class="p-4 font-medium text-on-surface">Air Filter Element 4X</td>
+<td class="p-4 text-on-surface-variant">Aftermarket</td>
+<td class="p-4 text-on-surface-variant">Toyota Camry, RAV4</td>
+<td class="p-4 text-right text-on-surface font-medium">$18.25</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="w-24 bg-surface-variant rounded-full h-1.5">
+<div class="bg-amber-500 h-1.5 rounded-full" style="width: 45%"></div>
+</div>
+<span class="font-label-sm text-xs text-on-surface-variant">45 / 100</span>
+</div>
+</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">In Stock</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="h-24 md:hidden"></div> <!-- Spacer for mobile nav -->
+</div>
+</main>
+<!-- Bottom Nav Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-16 bg-surface-container-lowest shadow-[0_-4px_8px_rgba(0,0,0,0.02)] border-t border-outline-variant/30 rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">grid_view</span>
+<span class="font-label-sm text-[10px]">Overview</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">map</span>
+<span class="font-label-sm text-[10px]">Map</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary bg-secondary/10 rounded-full px-4 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-label-sm text-[10px] font-medium">Inventory</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_horiz</span>
+<span class="font-label-sm text-[10px]">More</span>
+</button>
+</nav>
+</body></html>

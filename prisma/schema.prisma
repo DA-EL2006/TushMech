@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  MECHANIC
+  ADMIN
+  VENDOR
+}
+
+enum JobStatus {
+  PENDING
+  ASSIGNED
+  EN_ROUTE
+  DIAGNOSING
+  QUOTING
+  APPROVED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum DiagnosticStatus {
+  DRAFT
+  SUBMITTED
+  QA_APPROVED
+  REJECTED
+}
+
+enum ItemType {
+  PART
+  LABOR
+  CONSUMABLE
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PARTIAL
+  PAID
+}
+
+enum PaymentMethod {
+  PAYSTACK_CARD
+  ALAT_BNPL
+  CASH
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  role          Role      @default(CUSTOMER)
+  email         String    @unique
+  phone         String?   @unique
+  password_hash String
+  first_name    String
+  last_name     String
+  is_verified   Boolean   @default(false)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  vehicles      Vehicle[]
+  requests      Job[]     @relation("CustomerJobs")
+  assignments   Job[]     @relation("MechanicJobs")
+}
+
+model Vehicle {
+  id                String    @id @default(uuid())
+  user_id           String
+  make              String
+  model             String
+  year              Int
+  license_plate     String
+  vin               String?
+  current_mileage   Int       @default(0)
+  last_service_date DateTime?
+  created_at        DateTime  @default(now())
+
+  user              User      @relation(fields: [user_id], references: [id])
+  jobs              Job[]
+}
+
+model Job {
+  id               String    @id @default(uuid())
+  customer_id      String
+  mechanic_id      String?
+  vehicle_id       String
+  status           JobStatus @default(PENDING)
+  reported_issue   String
+  latitude         Float?
+  longitude        Float?
+  address          String?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  customer         User      @relation("CustomerJobs", fields: [customer_id], references: [id])
+  mechanic         User?     @relation("MechanicJobs", fields: [mechanic_id], references: [id])
+  vehicle          Vehicle   @relation(fields: [vehicle_id], references: [id])
+  
+  diagnostic_report DiagnosticReport?
+  invoice          Invoice?
+}
+
+model DiagnosticReport {
+  id             String           @id @default(uuid())
+  job_id         String           @unique
+  mechanic_notes String           @db.Text
+  obd2_codes     String[]         // e.g. ["P0300", "P0420"]
+  photo_urls     String[]         // Array of S3 URLs
+  status         DiagnosticStatus @default(DRAFT)
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+
+  job            Job              @relation(fields: [job_id], references: [id])
+  estimate_items EstimateItem[]
+}
+
+model EstimateItem {
+  id              String           @id @default(uuid())
+  diagnostic_id   String
+  type            ItemType
+  description     String
+  quantity        Int
+  unit_price      Float
+  total_price     Float
+  created_at      DateTime         @default(now())
+
+  diagnostic      DiagnosticReport @relation(fields: [diagnostic_id], references: [id])
+}
+
+model Invoice {
+  id             String        @id @default(uuid())
+  job_id         String        @unique
+  subtotal       Float
+  tax            Float
+  total_amount   Float
+  status         InvoiceStatus @default(UNPAID)
+  payment_method PaymentMethod?
+  alat_loan_id   String?
+  bnpl_status    String?       // PENDING, APPROVED, REJECTED
+  issued_at      DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+
+  job            Job           @relation(fields: [job_id], references: [id])
+  transactions   Transaction[]
+}
+
+model Transaction {
+  id         String            @id @default(uuid())
+  invoice_id String
+  amount     Float
+  reference  String            @unique // Paystack or ALAT reference
+  status     TransactionStatus @default(PENDING)
+  created_at DateTime          @default(now())
+
+  invoice    Invoice           @relation(fields: [invoice_id], references: [id])
+}

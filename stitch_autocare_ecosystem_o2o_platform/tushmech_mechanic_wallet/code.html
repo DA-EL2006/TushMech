@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>TushMech - Mechanic Wallet</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-error": "#ffffff",
+                "error": "#ba1a1a",
+                "secondary-container": "#316bf3",
+                "surface-container-high": "#e6e8ea",
+                "on-secondary-fixed-variant": "#003ea8",
+                "surface-container-lowest": "#ffffff",
+                "primary": "#000000",
+                "on-tertiary-fixed-variant": "#005236",
+                "surface": "#f7f9fb",
+                "tertiary-container": "#002113",
+                "on-tertiary-container": "#009668",
+                "error-container": "#ffdad6",
+                "surface-dim": "#d8dadc",
+                "on-surface": "#191c1e",
+                "on-secondary-container": "#fefcff",
+                "inverse-surface": "#2d3133",
+                "secondary-fixed": "#dbe1ff",
+                "on-primary": "#ffffff",
+                "on-primary-container": "#76849f",
+                "tertiary": "#000000",
+                "secondary": "#0051d5",
+                "on-primary-fixed-variant": "#39475f",
+                "inverse-primary": "#b9c7e4",
+                "primary-container": "#0d1c32",
+                "surface-container-low": "#f2f4f6",
+                "background": "#f7f9fb",
+                "surface-container": "#eceef0",
+                "surface-tint": "#515f78",
+                "primary-fixed-dim": "#b9c7e4",
+                "on-secondary-fixed": "#00174b",
+                "surface-bright": "#f7f9fb",
+                "inverse-on-surface": "#eff1f3",
+                "primary-fixed": "#d6e3ff",
+                "on-tertiary-fixed": "#002113",
+                "on-primary-fixed": "#0d1c32",
+                "surface-container-highest": "#e0e3e5",
+                "on-error-container": "#93000a",
+                "tertiary-fixed": "#6ffbbe",
+                "surface-variant": "#e0e3e5",
+                "outline": "#75777e",
+                "on-background": "#191c1e",
+                "on-secondary": "#ffffff",
+                "on-surface-variant": "#44474d",
+                "secondary-fixed-dim": "#b4c5ff",
+                "tertiary-fixed-dim": "#4edea3",
+                "outline-variant": "#c5c6cd",
+                "on-tertiary": "#ffffff"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "gutter": "24px",
+                "unit": "8px",
+                "margin-mobile": "16px",
+                "margin-desktop": "40px",
+                "touch-target-min": "48px",
+                "container-max": "1280px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "headline-lg-mobile": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "body-md": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom Utility for Safe Areas */
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+        .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+        
+        /* Subtle Fintech Glow */
+        .fintech-glow {
+            box-shadow: 0 4px 24px -4px rgba(49, 107, 243, 0.15);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface-bright text-on-surface font-body-md antialiased min-h-screen relative">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-6 h-touch-target-min z-50 bg-surface-bright border-b border-outline-variant flat">
+<div class="flex items-center gap-2">
+<img alt="TushMech Logo" class="w-8 h-8 rounded-md object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmsFJcVudeUXXqXL13pfqyLI_JTtUjsDus-I9skWBcYQjFKWB_gzO7UGDOl-Oc8wNOlCn5jIsMxZKASlWghn5wjte3xfRML0BDBJ0gaZjYOVX7C8LZSFUoyGSEDLS0BBb40zX952GUjfFKeD3w9s5H6_LR0b7yban_khhDDaKWUi3KYLASOs3EXe_7P7kp27c6KmmUT7GpfvWkCewSpyg0S6GFCk1r7YFn1X8hix0xaKvspyrqczg_DppWvsQnlLeTju5ubKTq4E1X"/>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">TushMech</h1>
+</div>
+<button aria-label="Notifications" class="w-touch-target-min h-touch-target-min flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors active:opacity-80 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="pt-[64px] pb-[96px] px-margin-mobile md:px-margin-desktop max-w-2xl mx-auto flex flex-col gap-6 mt-4">
+<!-- Header -->
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-primary">Wallet</h2>
+<button class="flex items-center gap-1 text-secondary font-label-md text-label-md hover:opacity-80 active:opacity-60 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">history</span>
+                Statements
+            </button>
+</div>
+<!-- Primary Fintech Dashboard Card (Balance) -->
+<div class="bg-primary-container rounded-xl p-6 flex flex-col gap-4 relative overflow-hidden fintech-glow shadow-[0_8px_24px_rgba(13,28,50,0.15)]">
+<!-- Background Decorative Element -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex flex-col relative z-10">
+<span class="font-label-md text-label-md text-inverse-primary/80 uppercase tracking-wider">Total Balance</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-display-lg text-display-lg text-on-primary">$4,850.00</span>
+</div>
+</div>
+<div class="flex justify-between items-end border-t border-inverse-primary/20 pt-4 mt-2 relative z-10">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-inverse-primary/80">Today's Earnings</span>
+<span class="font-headline-md text-headline-md text-tertiary-fixed-dim">+$320.50</span>
+</div>
+<button class="bg-secondary text-on-secondary font-label-md text-label-md px-6 h-[40px] rounded-lg shadow-sm hover:shadow-md hover:bg-on-secondary-fixed-variant transition-all active:scale-95 flex items-center justify-center gap-1 border border-transparent inset-ring-1 inset-ring-white/10">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+                    Withdraw
+                </button>
+</div>
+</div>
+<!-- Tool Loan Widget (Secondary Widget) -->
+<div class="bg-surface-container-lowest border border-outline-variant shadow-[0_4px_8px_rgba(0,0,0,0.02)] rounded-xl p-4 flex items-center justify-between gap-4 relative overflow-hidden hover:shadow-[0_8px_16px_rgba(0,0,0,0.04)] transition-shadow">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
+<div class="flex items-center gap-4 z-10">
+<div class="w-12 h-12 rounded-full bg-secondary-container/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">build</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-label-md text-label-md text-primary">Need new gear?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mt-1">Tool loans up to $5,000.</p>
+</div>
+</div>
+<button class="text-secondary font-label-md text-label-md hover:bg-secondary-container/10 px-4 py-2 rounded-lg transition-colors z-10">
+                Apply Now
+            </button>
+</div>
+<!-- Recent Transactions -->
+<div class="flex flex-col gap-2">
+<h3 class="font-label-md text-label-md text-primary mb-1">Recent Jobs</h3>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm flex flex-col">
+<!-- Transaction Item 1 -->
+<div class="flex items-center justify-between p-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors min-h-[64px]">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary">Brake Pad Replacement</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Toyota Camry • Today, 2:30 PM</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-on-tertiary-container">+$145.00</span>
+</div>
+<!-- Transaction Item 2 -->
+<div class="flex items-center justify-between p-4 border-b border-outline-variant hover:bg-surface-container-low transition-colors min-h-[64px]">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">oil_barrel</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary">Full Synthetic Oil Change</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Honda Civic • Today, 10:15 AM</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-on-tertiary-container">+$85.50</span>
+</div>
+<!-- Transaction Item 3 -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors min-h-[64px]">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">battery_charging_full</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary">Battery Diagnostics</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ford F-150 • Yesterday, 4:00 PM</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-on-tertiary-container">+$90.00</span>
+</div>
+</div>
+<button class="w-full text-center py-4 text-secondary font-label-md text-label-md hover:bg-surface-container-low rounded-lg transition-colors mt-1">
+                View All Transactions
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-[48px] bg-surface-container-lowest shadow-[0_-4px_8px_rgba(0,0,0,0.02)] border-t border-outline-variant rounded-t-xl md:hidden">
+<!-- Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary transition-all active:scale-95 duration-200 w-touch-target-min h-touch-target-min" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home_app_logo</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<!-- Garage (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary transition-all active:scale-95 duration-200 w-touch-target-min h-touch-target-min" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">directions_car</span>
+<span class="font-label-sm text-label-sm mt-1">Garage</span>
+</a>
+<!-- Market (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary transition-all active:scale-95 duration-200 w-touch-target-min h-touch-target-min" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">handshake</span>
+<span class="font-label-sm text-label-sm mt-1">Market</span>
+</a>
+<!-- Profile (Active Semantic Match for Wallet) -->
+<a class="flex flex-col items-center justify-center text-secondary bg-secondary-container/10 rounded-full px-4 py-1 active:scale-95 duration-200 h-touch-target-min" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

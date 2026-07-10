@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TushMech - QA Approval Queue</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-surface": "#2d3133",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary": "#000000",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#002113",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#b9c7e4",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#fefcff",
+                        "on-surface-variant": "#44474d",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#002113",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-fixed": "#0d1c32",
+                        "secondary-container": "#316bf3",
+                        "surface": "#f7f9fb",
+                        "on-background": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "secondary": "#0051d5",
+                        "outline-variant": "#c5c6cd",
+                        "primary-fixed": "#d6e3ff",
+                        "outline": "#75777e",
+                        "on-surface": "#191c1e",
+                        "primary-fixed-dim": "#b9c7e4",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-primary-container": "#76849f",
+                        "background": "#f8fafc", /* Adjusted to match level 0 */
+                        "primary": "#0a192f", /* Deep Navy */
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-dim": "#d8dadc",
+                        "primary-container": "#0d1c32",
+                        "on-secondary-fixed": "#00174b",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-container": "#009668",
+                        "on-primary-fixed-variant": "#39475f",
+                        "surface-tint": "#515f78",
+                        "brand-blue": "#2563eb",
+                        "brand-green": "#10b981",
+                        "brand-orange": "#f59e0b"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "unit": "8px",
+                        "touch-target-min": "48px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px",
+                        "container-max": "1280px"
+                    },
+                    fontFamily: {
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }]
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgba(10, 25, 47, 0.05), 0 2px 4px -1px rgba(10, 25, 47, 0.03)',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex antialiased">
+<!-- Top App Bar (Mobile Only) -->
+<header class="md:hidden fixed top-0 w-full z-50 bg-surface dark:bg-inverse-surface border-b border-outline-variant shadow-sm flex justify-between items-center h-16 px-margin-mobile">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold">TM</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">TushMech</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Side Navigation (Desktop Only) -->
+<aside class="hidden md:flex flex-col w-64 bg-surface border-r border-outline-variant h-screen fixed top-0 left-0 z-40 shadow-soft">
+<div class="h-20 flex items-center px-6 border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary font-bold text-xl shadow-md">TM</div>
+<div>
+<span class="font-headline-md text-headline-md text-primary tracking-tight block">TushMech</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Admin Portal</span>
+</div>
+</div>
+</div>
+<nav class="flex-1 py-6 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors h-touch-target-min" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors h-touch-target-min" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-md text-label-md">Live Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors h-touch-target-min" href="#">
+<span class="material-symbols-outlined">engineering</span>
+<span class="font-label-md text-label-md">Mechanics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-container text-primary font-bold shadow-sm h-touch-target-min border-l-4 border-brand-blue" href="#">
+<span class="material-symbols-outlined icon-fill">rule_folder</span>
+<span class="font-label-md text-label-md">QA Queue</span>
+<span class="ml-auto bg-brand-orange/20 text-brand-orange text-xs font-bold px-2 py-1 rounded-full">15</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors h-touch-target-min" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-outline-variant">
+<div class="flex items-center gap-3 px-2 py-2">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="Professional headshot of a fleet administrator in a bright, modern office setting, corporate modern aesthetic, clean lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOYxVyvvBOlr3RST09UmaSVfmJh7Ayg6JjPX-KzBGKciV8juXem6H7ERO5EMPGlQRJ61c1aix4MbkWmS7Ebu-Q52MHAdEST2YInJYKKypDBNQSnvFLJKqsydDDs1oCdQg_69_jLYVK7GYNDleMP9lmNwEp4en8z9i4oCCu_xJVToQNjBkntY2drDO-rrjzyv4--KayV7NGhgiqqgjalKnXzzIRXDG_2excQCoRFGSVSMNg0IyNAbKFyTHjCTGXgEHc7ia64oFqdMNI"/>
+<div>
+<span class="block font-label-md text-label-md text-primary">Admin User</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Fleet Operations</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 pt-16 md:pt-0 min-h-screen pb-safe pb-24 md:pb-8">
+<!-- Page Header -->
+<div class="bg-surface border-b border-outline-variant sticky top-16 md:top-0 z-30 shadow-sm">
+<div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h1 class="font-headline-lg text-headline-lg text-primary">QA Approval Queue</h1>
+<span class="bg-brand-orange/10 text-brand-orange border border-brand-orange/20 font-label-sm text-label-sm px-3 py-1 rounded-full flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse"></span>
+                                15 Pending
+                            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Review and approve diagnostic reports from the field.</p>
+</div>
+<!-- Action & Filter Bar -->
+<div class="flex flex-wrap items-center gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="h-touch-target-min pl-10 pr-4 rounded-lg border border-outline-variant focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 bg-surface text-sm w-full md:w-64 outline-none transition-all" placeholder="Search vehicle or mechanic..." type="text"/>
+</div>
+<button class="h-touch-target-min px-4 border border-outline-variant rounded-lg flex items-center gap-2 hover:bg-surface-container transition-colors bg-surface">
+<span class="material-symbols-outlined">filter_list</span>
+<span class="font-label-md text-label-md text-primary">Filters</span>
+</button>
+</div>
+</div>
+<!-- Quick Filters -->
+<div class="flex gap-2 mt-6 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-4 py-2 rounded-full border border-primary bg-primary text-on-primary font-label-sm text-label-sm whitespace-nowrap">All Reports</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-orange"></span> Urgent (3)
+                    </button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap">EV Fleet</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap">Heavy Duty</button>
+</div>
+</div>
+</div>
+<!-- QA Queue Grid -->
+<div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-gutter">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Card 1 (Urgent) -->
+<div class="bg-surface rounded-xl border border-outline-variant shadow-soft relative overflow-hidden flex flex-col border-l-4 border-l-brand-orange">
+<div class="p-6 flex-1">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">directions_car</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary text-lg">2022 Tesla Model 3</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">VIN: 5YJ3E1EA3NF******</p>
+</div>
+</div>
+<span class="bg-brand-orange/10 text-brand-orange font-label-sm text-label-sm px-2 py-1 rounded-full uppercase tracking-wider font-bold">Urgent</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-background rounded-lg p-3 border border-surface-variant">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Mechanic</span>
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Headshot of a professional mechanic wearing a clean branded uniform, standing in a well-lit modern garage, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARuAjnz6JtmN3A34wUdIvKpYqIu6eItXIhG8nXX8nzRERCjdnGTxuHQMBjb72rumkv7bxdAGJPiUIuHBPd0HYVM-OSdadv3VMEjvNalVihdYHZw6DBZ5nntCmzgopDkkve8fsjlRC-3xOBGDj85aKAT8FR8heaEuzENNNy68MGOF4s2xxB-PWhZHQWeg48OPP7W-RlR8NSzZEzJv7C-A1cMNVqcuSRxXeKilVeszJ_k39hPst1gLmTZ-l5qbHh1NCmwFcVIgiCpNRo"/>
+<span class="font-label-md text-label-md text-primary">Sarah Jenkins</span>
+</div>
+</div>
+<div class="bg-background rounded-lg p-3 border border-surface-variant">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Time Logged</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">schedule</span>
+<span class="font-label-md text-label-md text-primary">45 mins ago</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<span class="block font-label-md text-label-md text-primary mb-2">Key Findings</span>
+<div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant/50 text-sm font-body-md text-on-surface-variant">
+                                High voltage battery cooling system showing abnormal pressure drops. Thermal management module flagged for immediate review to prevent cell degradation.
+                            </div>
+</div>
+</div>
+<div class="border-t border-outline-variant p-4 bg-surface-bright flex gap-3">
+<button class="flex-1 h-touch-target-min bg-brand-blue hover:bg-brand-blue/90 text-on-primary font-label-md text-label-md rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                            Review Full Report
+                        </button>
+<button class="w-touch-target-min h-touch-target-min border border-outline-variant text-on-surface-variant hover:text-brand-green hover:border-brand-green hover:bg-brand-green/10 rounded-lg transition-colors flex items-center justify-center" title="Quick Approve">
+<span class="material-symbols-outlined">check</span>
+</button>
+</div>
+</div>
+<!-- Card 2 (Normal) -->
+<div class="bg-surface rounded-xl border border-outline-variant shadow-soft relative overflow-hidden flex flex-col border-l-4 border-l-primary-fixed-dim">
+<div class="p-6 flex-1">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">local_shipping</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary text-lg">2019 Ford F-150 Fleet</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Unit: #402</p>
+</div>
+</div>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-2 py-1 rounded-full uppercase tracking-wider font-bold">Pending Review</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-background rounded-lg p-3 border border-surface-variant">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Mechanic</span>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold">MR</div>
+<span class="font-label-md text-label-md text-primary">Mike Ross</span>
+</div>
+</div>
+<div class="bg-background rounded-lg p-3 border border-surface-variant">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Time Logged</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">schedule</span>
+<span class="font-label-md text-label-md text-primary">2 hrs ago</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<span class="block font-label-md text-label-md text-primary mb-2">Key Findings</span>
+<div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant/50 text-sm font-body-md text-on-surface-variant">
+                                Routine 50k mile service completed. Brake pads at 4mm, recommended replacement on next cycle. No critical faults detected in OBD2 scan.
+                            </div>
+</div>
+</div>
+<div class="border-t border-outline-variant p-4 bg-surface-bright flex gap-3">
+<button class="flex-1 h-touch-target-min border-2 border-primary text-primary hover:bg-surface-container font-label-md text-label-md rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                            Review Full Report
+                        </button>
+<button class="w-touch-target-min h-touch-target-min border border-outline-variant text-on-surface-variant hover:text-brand-green hover:border-brand-green hover:bg-brand-green/10 rounded-lg transition-colors flex items-center justify-center" title="Quick Approve">
+<span class="material-symbols-outlined">check</span>
+</button>
+</div>
+</div>
+<!-- Add more cards as needed for the grid... -->
+</div>
+</div>
+</main>
+<!-- Bottom Nav Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant shadow-[0_-4px_6px_-1px_rgba(10,25,47,0.05)] pb-safe rounded-t-xl">
+<div class="flex justify-around items-center h-touch-target-min w-full px-2 pt-2 pb-1">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-brand-blue w-16" href="#">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-label-sm text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-brand-blue bg-brand-blue/10 rounded-xl px-3 py-1 w-16" href="#">
+<span class="material-symbols-outlined icon-fill mb-1">rule_folder</span>
+<span class="font-label-sm text-[10px] font-bold">QA</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-brand-blue w-16" href="#">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-label-sm text-[10px] font-medium">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-brand-blue w-16" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-sm text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

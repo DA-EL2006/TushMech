@@ -1,8 +1,80 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* === TushMech Design System — Precision OS + Mechanical Excellence === */
+
+  /* --- Surfaces --- */
+  --surface: #f7f9fb;
+  --surface-dim: #d8dadc;
+  --surface-bright: #f7f9fb;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f2f4f6;
+  --surface-container: #eceef0;
+  --surface-container-high: #e6e8ea;
+  --surface-container-highest: #e0e3e5;
+
+  /* --- On Surfaces --- */
+  --on-surface: #191c1e;
+  --on-surface-variant: #44474d;
+  --on-background: #191c1e;
+
+  /* --- Inverse --- */
+  --inverse-surface: #2d3133;
+  --inverse-on-surface: #eff1f3;
+  --inverse-primary: #b9c7e4;
+
+  /* --- Outline --- */
+  --outline: #75777e;
+  --outline-variant: #c5c6cd;
+
+  /* --- Primary --- */
+  --primary: #000000;
+  --on-primary: #ffffff;
+  --primary-container: #0d1c32;
+  --on-primary-container: #76849f;
+  --primary-fixed: #d6e3ff;
+  --primary-fixed-dim: #b9c7e4;
+  --on-primary-fixed: #0d1c32;
+  --on-primary-fixed-variant: #39475f;
+
+  /* --- Secondary / Electric Action Blue --- */
+  --secondary: #0051d5;
+  --on-secondary: #ffffff;
+  --secondary-container: #316bf3;
+  --on-secondary-container: #fefcff;
+  --secondary-fixed: #dbe1ff;
+  --secondary-fixed-dim: #b4c5ff;
+  --on-secondary-fixed: #00174b;
+  --on-secondary-fixed-variant: #003ea8;
+
+  /* --- Tertiary / Verification Green --- */
+  --tertiary: #000000;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #002113;
+  --on-tertiary-container: #009668;
+  --tertiary-fixed: #6ffbbe;
+  --tertiary-fixed-dim: #4edea3;
+  --on-tertiary-fixed: #002113;
+  --on-tertiary-fixed-variant: #005236;
+
+  /* --- Error --- */
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+
+  /* --- Background --- */
+  --background: #f7f9fb;
+  --foreground: #191c1e;
+  --surface-tint: #515f78;
+  --surface-variant: #e0e3e5;
+
+  /* --- Brand Accents --- */
+  --deep-navy: #0A192F;
+  --electric-blue: #2563EB;
+  --verification-green: #10B981;
+  --warning-orange: #F59E0B;
 }
 
 @theme inline {
@@ -10,6 +82,74 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Surface Colors */
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-variant: var(--surface-variant);
+  --color-surface-tint: var(--surface-tint);
+
+  /* On-Surface Colors */
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-on-background: var(--on-background);
+
+  /* Primary */
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+
+  /* Secondary */
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
+
+  /* Tertiary */
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+
+  /* Error */
+  --color-error: var(--error);
+  --color-on-error: var(--on-error);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+
+  /* Inverse */
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-inverse-primary: var(--inverse-primary);
+
+  /* Outline */
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+
+  /* Brand */
+  --color-deep-navy: var(--deep-navy);
+  --color-electric-blue: var(--electric-blue);
+  --color-verification-green: var(--verification-green);
+  --color-warning-orange: var(--warning-orange);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +159,193 @@
   }
 }
 
+/* === Base Styles === */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
+
+/* === Material Symbols === */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* === Utility Classes === */
+
+/* Glass Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid #E2E8F0;
+}
+
+/* Ambient Shadow Levels */
+.ambient-shadow {
+  box-shadow: 0 4px 6px -1px rgba(10, 25, 47, 0.05), 0 2px 4px -1px rgba(10, 25, 47, 0.03);
+}
+.shadow-level-1 {
+  box-shadow: 0 4px 4px rgba(13, 28, 50, 0.02);
+}
+.shadow-level-2 {
+  box-shadow: 0 8px 8px rgba(13, 28, 50, 0.05);
+}
+.shadow-level-3 {
+  box-shadow: 0 16px 16px rgba(13, 28, 50, 0.10);
+}
+
+/* Clinical Grid Background */
+.clinical-grid {
+  background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Fintech Glow */
+.fintech-glow {
+  box-shadow: 0 4px 24px -4px rgba(49, 107, 243, 0.15);
+}
+
+/* Hidden Scrollbar */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe Area Padding */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e0e3e5;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c5c6cd;
+}
+
+/* Map Pin Pulse Animation */
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  80%, 100% { transform: scale(2.5); opacity: 0; }
+}
+.pin-pulse::before {
+  content: '';
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background-color: #0051d5;
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* Service Card Interaction */
+.service-card {
+  transition: all 0.2s ease-in-out;
+}
+.service-card:active {
+  transform: scale(0.98);
+}
+.service-card.selected {
+  border-color: #0051d5;
+  background-color: #f7f9fb;
+  box-shadow: 0 0 0 2px #0051d5, 0 4px 12px -2px rgba(0, 81, 213, 0.15);
+}
+
+/* Bottom Sheet Handle */
+.bottom-sheet-handle {
+  width: 40px;
+  height: 4px;
+  background-color: #c5c6cd;
+  border-radius: 2px;
+  margin: 0 auto 16px auto;
+}
+
+/* Swipe to Confirm */
+.swipe-track {
+  position: relative;
+  background: #f1f5f9;
+  border-radius: 9999px;
+  height: 72px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.swipe-thumb {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  bottom: 4px;
+  width: 64px;
+  background-color: #0d1c32;
+  border-radius: 9999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.1s;
+}
+.swipe-text {
+  width: 100%;
+  text-align: center;
+  z-index: 5;
+  color: #0d1c32;
+  font-weight: 700;
+  font-size: 16px;
+}
+.swipe-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background-color: #0051d5;
+  opacity: 0.15;
+  border-radius: 9999px;
+  z-index: 1;
+}
+
+/* Splash Screen */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0d1c32 0%, #0A192F 50%, #112240 100%);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.splash-screen.fade-out {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+/* Subtle glowing border for active inputs */
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 2px rgba(49, 107, 243, 0.2);
+  border-color: #316bf3;
+  outline: none;
 }

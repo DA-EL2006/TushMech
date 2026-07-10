@@ -1,65 +1,149 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
+  const [showSplash, setShowSplash] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFadeOut(true);
+      setTimeout(() => setShowSplash(false), 600);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <>
+      {/* Splash Screen */}
+      {showSplash && (
+        <div className={`splash-screen ${fadeOut ? "fade-out" : ""}`}>
+          <div className="flex flex-col items-center gap-6 animate-pulse">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/images/tushmech_logo.jpg"
+              alt="TushMech Logo"
+              width={120}
+              height={120}
+              className="rounded-2xl shadow-2xl border-2 border-white/10"
+              priority
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white tracking-tight">TushMech</h1>
+              <p className="text-sm text-[var(--inverse-primary)] mt-2 tracking-widest uppercase">Precision Autocare</p>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      )}
+
+      {/* Main Hub Page */}
+      <div className="flex flex-col min-h-screen bg-[var(--background)]">
+        {/* Header */}
+        <header className="sticky top-0 z-40 bg-[var(--surface-bright)] border-b border-[var(--outline-variant)] px-4 md:px-10 h-16 flex items-center gap-3">
+          <Image
+            src="/images/tushmech_logo.jpg"
+            alt="TushMech"
+            width={36}
+            height={36}
+            className="rounded-md shadow-sm"
+          />
+          <h1 className="text-2xl font-semibold text-[var(--primary)] tracking-tight">TushMech</h1>
+        </header>
+
+        <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-10 py-8 md:py-12">
+          {/* Hero */}
+          <section className="mb-12 text-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-[var(--primary)] tracking-tight leading-tight mb-4">
+              Precision Autocare<br />Ecosystem
+            </h2>
+            <p className="text-lg text-[var(--on-surface-variant)] max-w-2xl mx-auto">
+              On-demand mobile mechanics, verified spare parts, embedded financing, and fleet-grade diagnostics — all in one premium O2O platform.
+            </p>
+          </section>
+
+          {/* Role Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            {/* Customer */}
+            <Link href="/customer/dashboard" className="group bg-[var(--primary-container)] text-[var(--on-primary)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-2 hover:shadow-level-3 transition-all relative overflow-hidden border border-[var(--primary-container)]">
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10 pointer-events-none" />
+              <div className="bg-white/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-[32px] text-white">directions_car</span>
+              </div>
+              <div>
+                <h3 className="text-2xl font-semibold text-white mb-1">Customer Portal</h3>
+                <p className="text-[var(--inverse-primary)] opacity-80">Dashboard, book mechanics, shop parts, finance repairs</p>
+              </div>
+            </Link>
+
+            {/* Mechanic */}
+            <Link href="/mechanic/profile" className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all">
+              <div className="bg-[var(--secondary-container)]/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-[32px] text-[var(--secondary)]">build</span>
+              </div>
+              <div>
+                <h3 className="text-2xl font-semibold text-[var(--primary)] mb-1">Mechanic Portal</h3>
+                <p className="text-[var(--on-surface-variant)]">Profile, wallet, dispatch, earnings & tool loans</p>
+              </div>
+            </Link>
+
+            {/* Admin */}
+            <Link href="/admin/control-room" className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all">
+              <div className="bg-[var(--secondary-container)]/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-[32px] text-[var(--secondary)]">admin_panel_settings</span>
+              </div>
+              <div>
+                <h3 className="text-2xl font-semibold text-[var(--primary)] mb-1">Admin Control</h3>
+                <p className="text-[var(--on-surface-variant)]">Live control room, QA queue, report review</p>
+              </div>
+            </Link>
+
+            {/* Vendor */}
+            <Link href="/vendor/inventory" className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all">
+              <div className="bg-[var(--secondary-container)]/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-[32px] text-[var(--secondary)]">inventory_2</span>
+              </div>
+              <div>
+                <h3 className="text-2xl font-semibold text-[var(--primary)] mb-1">Vendor Hub</h3>
+                <p className="text-[var(--on-surface-variant)]">Inventory management, escrow payouts, QA reports</p>
+              </div>
+            </Link>
+          </div>
+
+          {/* Quick Links */}
+          <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: "handyman", label: "Book Mechanic", href: "/customer/booking" },
+              { icon: "shopping_cart", label: "Gadget Shop", href: "/customer/shop" },
+              { icon: "receipt_long", label: "Checkout", href: "/customer/checkout" },
+              { icon: "health_and_safety", label: "Diagnostics", href: "/customer/diagnostic-report" },
+              { icon: "account_balance_wallet", label: "Wallet", href: "/mechanic/wallet" },
+              { icon: "local_shipping", label: "Dispatch", href: "/mechanic/dispatch" },
+              { icon: "calculate", label: "Finance", href: "/customer/finance" },
+              { icon: "monitoring", label: "Earnings", href: "/mechanic/earnings" },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-4 flex flex-col items-center gap-2 hover:shadow-level-1 hover:border-[var(--secondary)] transition-all group"
+              >
+                <span className="material-symbols-outlined text-[28px] text-[var(--secondary)] group-hover:scale-110 transition-transform">
+                  {item.icon}
+                </span>
+                <span className="text-xs font-semibold text-[var(--on-surface)] text-center">{item.label}</span>
+              </Link>
+            ))}
+          </section>
+        </main>
+
+        {/* Footer */}
+        <footer className="border-t border-[var(--outline-variant)] py-6 px-4 text-center">
+          <p className="text-xs text-[var(--on-surface-variant)]">
+            © 2026 TushMech — Precision Autocare Ecosystem. All rights reserved.
+          </p>
+        </footer>
+      </div>
+    </>
   );
 }
