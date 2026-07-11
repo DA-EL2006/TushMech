@@ -3,18 +3,24 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [showSplash, setShowSplash] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setFadeOut(true);
-      setTimeout(() => setShowSplash(false), 600);
+      setTimeout(() => {
+        router.push("/login");
+      }, 600);
     }, 2500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   return (
     <>
