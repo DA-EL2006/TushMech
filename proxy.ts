@@ -6,6 +6,11 @@ export default withAuth(
     const token = req.nextauth.token;
     const path = req.nextUrl.pathname;
 
+    // Onboarding pages are public — allow unauthenticated access
+    if (path.endsWith("/onboarding")) {
+      return NextResponse.next();
+    }
+
     if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
@@ -41,16 +46,23 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token,
+      // Allow the middleware function itself to decide — return true to let it run
+      authorized: ({ token, req }) => {
+        const path = req.nextUrl.pathname;
+        // Onboarding is always allowed through
+        if (path.endsWith("/onboarding")) return true;
+        return !!token;
+      },
     },
   }
 );
 
 export const config = {
   matcher: [
-    "/customer/:path*",
-    "/mechanic/:path*",
-    "/admin/:path*",
-    "/vendor/:path*",
+    // Protect all role-based routes EXCEPT the /onboarding entry pages
+    "/customer/((?!onboarding).*)",
+    "/mechanic/((?!onboarding).*)",
+    "/admin/((?!onboarding).*)",
+    "/vendor/((?!onboarding).*)",
   ],
 };

@@ -12,6 +12,7 @@ const navItems = [
   { icon: "my_location", label: "Live Control", href: "/admin/control-room" },
   { icon: "build", label: "Mechanics", href: "#" },
   { icon: "assignment", label: "QA Queue", href: "/admin/qa-queue" },
+  { icon: "bar_chart", label: "Analytics", href: "/admin/analytics" },
   { icon: "settings", label: "Settings", href: "#" },
 ];
 

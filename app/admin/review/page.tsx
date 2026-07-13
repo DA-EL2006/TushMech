@@ -1,9 +1,27 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import TopAppBar from "../../components/TopAppBar";
 
 export default function DetailedReview() {
+  const router = useRouter();
+  const [comment, setComment] = useState("");
+  const [approved, setApproved] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMsg, setModalMsg] = useState("");
+  const [modalSent, setModalSent] = useState(false);
+
+  const handleApprove = () => {
+    setApproved(true);
+    setTimeout(() => router.push("/admin/qa-queue"), 2000);
+  };
+
+  const handleSendClarification = () => {
+    setModalSent(true);
+    setTimeout(() => { setShowModal(false); setModalSent(false); setModalMsg(""); }, 1500);
+  };
   return (
     <div className="min-h-screen bg-[var(--surface-bright)]">
       <TopAppBar title="TushMech" />
@@ -114,30 +132,68 @@ export default function DetailedReview() {
             </section>
           </div>
 
-          <div className="lg:col-span-4">
+        <div className="lg:col-span-4">
             <div className="sticky top-24 bg-white border border-[var(--outline-variant)] rounded-xl shadow-sm flex flex-col">
               <div className="border-b border-[var(--outline-variant)] px-6 py-4 bg-[var(--surface-container-low)]">
                 <h2 className="text-xl font-semibold text-[var(--primary)]">Review Actions</h2>
               </div>
               <div className="p-6 flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-semibold text-[var(--primary)]" htmlFor="admin-comments">Internal QA Comments</label>
-                  <textarea id="admin-comments" rows={4} placeholder="Add notes for the mechanic..." className="w-full p-4 bg-[var(--surface-bright)] rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-2 focus:ring-[var(--secondary)]/20 text-sm resize-none outline-none transition-all" />
-                  <p className="text-xs text-[var(--on-surface-variant)]">These notes will be attached to the job record.</p>
-                </div>
-                <div className="flex flex-col gap-3 mt-4 border-t border-[var(--outline-variant)] pt-6">
-                  <button className="w-full h-12 flex items-center justify-center gap-2 bg-[var(--on-tertiary-container)] hover:bg-[var(--on-tertiary-fixed-variant)] text-white rounded-lg text-sm font-semibold transition-colors shadow-sm active:scale-[0.98]">
-                    <span className="material-symbols-outlined text-[18px]">check_circle</span> Approve &amp; Send to Customer
-                  </button>
-                  <button className="w-full h-12 flex items-center justify-center gap-2 bg-white hover:bg-[var(--error-container)]/20 border-2 border-[var(--error)] text-[var(--error)] rounded-lg text-sm font-semibold transition-colors active:scale-[0.98]">
-                    <span className="material-symbols-outlined text-[18px]">help</span> Request Clarification
-                  </button>
-                </div>
+                {approved ? (
+                  <div className="bg-[var(--verification-green)]/10 border border-[var(--verification-green)]/30 rounded-xl p-6 text-center">
+                    <span className="material-symbols-outlined text-[var(--verification-green)] text-4xl block mb-2" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>
+                    <p className="font-bold text-[var(--verification-green)]">Report Approved!</p>
+                    <p className="text-xs text-[var(--on-surface-variant)] mt-1">Redirecting to QA Queue...</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-semibold text-[var(--primary)]" htmlFor="admin-comments">Internal QA Comments</label>
+                      <textarea id="admin-comments" rows={4} value={comment} onChange={e => setComment(e.target.value)} placeholder="Add notes for the mechanic..." className="w-full p-4 bg-[var(--surface-bright)] rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-2 focus:ring-[var(--secondary)]/20 text-sm resize-none outline-none transition-all" />
+                      <p className="text-xs text-[var(--on-surface-variant)]">These notes will be attached to the job record.</p>
+                    </div>
+                    <Link href="/customer/my-report" target="_blank" className="w-full h-10 flex items-center justify-center gap-2 border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-low)] rounded-lg text-sm font-semibold transition-colors">
+                      <span className="material-symbols-outlined text-[18px]">preview</span>Preview as Customer
+                    </Link>
+                    <div className="flex flex-col gap-3 border-t border-[var(--outline-variant)] pt-4">
+                      <button onClick={handleApprove} className="w-full h-12 flex items-center justify-center gap-2 bg-[var(--on-tertiary-container)] hover:opacity-90 text-white rounded-lg text-sm font-semibold transition-all shadow-sm active:scale-[0.98]">
+                        <span className="material-symbols-outlined text-[18px]">check_circle</span> Approve &amp; Send to Customer
+                      </button>
+                      <button onClick={() => setShowModal(true)} className="w-full h-12 flex items-center justify-center gap-2 bg-white hover:bg-[var(--error-container)]/20 border-2 border-[var(--error)] text-[var(--error)] rounded-lg text-sm font-semibold transition-colors active:scale-[0.98]">
+                        <span className="material-symbols-outlined text-[18px]">help</span> Request Clarification
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      {/* Clarification Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-bold text-[var(--primary)] mb-4">Request Clarification</h3>
+            {modalSent ? (
+              <div className="text-center py-6">
+                <span className="material-symbols-outlined text-[var(--verification-green)] text-4xl block mb-2" style={{fontVariationSettings:"'FILL' 1"}}>send</span>
+                <p className="font-semibold text-[var(--verification-green)]">Message sent to mechanic!</p>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-[var(--on-surface-variant)] mb-3">What needs to be clarified? The mechanic will be notified.</p>
+                <textarea rows={4} value={modalMsg} onChange={e => setModalMsg(e.target.value)} placeholder="e.g. Please upload a clearer photo of the transmission pan..." className="w-full p-4 rounded-xl border border-[var(--outline-variant)] focus:border-[var(--secondary)] outline-none text-sm resize-none mb-4" />
+                <div className="flex gap-3">
+                  <button onClick={() => setShowModal(false)} className="flex-1 h-11 border border-[var(--outline-variant)] rounded-xl text-sm font-semibold text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-low)] transition-colors">Cancel</button>
+                  <button onClick={handleSendClarification} disabled={!modalMsg.trim()} className="flex-1 h-11 bg-[var(--primary)] text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40">Send Request</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

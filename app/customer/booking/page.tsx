@@ -17,6 +17,8 @@ export default function BookingMap() {
   const router = useRouter();
   const [selected, setSelected] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [trackingPhase, setTrackingPhase] = useState<"idle"|"finding"|"assigned"|"enroute"|"arriving"|"done">("idle");
+  const [eta, setEta] = useState(12);
 
   const services = [
     { icon: "health_and_safety", title: "Diagnostics", desc: "Check engine light or weird noises." },
@@ -36,49 +38,89 @@ export default function BookingMap() {
   ], []);
 
   const handleRequestTriage = async () => {
-    if (!session?.user?.id) {
-      alert("Please sign in to request a mechanic.");
-      router.push("/login");
-      return;
-    }
-
     setLoading(true);
-    try {
-      // 1. We assume the user has a vehicle. In a real app we'd let them select it.
-      // For MVP, we will fetch their vehicle or use a fallback.
-      // Since we just need to hit the API, we'll send a request to a temporary vehicle ID if we don't know it,
-      // but the API expects `vehicle_id`. Let's assume the seeded vehicle or fetch it.
-      // For Hackathon speed, we can fetch their vehicles first or just use a dummy one if it fails.
-      
-      const res = await fetch("/api/jobs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customer_id: session.user.id,
-          // HACK: Hardcoded for MVP since we don't have a vehicle selector UI built in this view yet.
-          // In a real scenario, this would come from a dropdown.
-          // Using a placeholder UUID or the API will handle it if we adjust the API.
-          // Wait, our API requires a real vehicle_id for the Prisma foreign key.
-          // We will modify the API or just send a dummy string and handle it on the server.
-          // Let's send a flag and let the server pick their first vehicle.
-          fetch_first_vehicle: true, 
-          reported_issue: services[selected].title,
-          latitude: userLocation[0],
-          longitude: userLocation[1],
-          address: "Lekki Phase 1, Lagos"
-        })
-      });
-
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
-
-      alert("Mechanic requested! They are reviewing your triage request.");
-      router.push("/customer/dashboard");
-    } catch (err: any) {
-      alert(err.message || "Failed to request mechanic");
-      setLoading(false);
-    }
+    // Simulate finding mechanic
+    setTrackingPhase("finding");
+    setTimeout(() => {
+      setTrackingPhase("assigned");
+      setTimeout(() => {
+        setTrackingPhase("enroute");
+        // Count down ETA
+        let e = 12;
+        const interval = setInterval(() => {
+          e -= 1;
+          setEta(e);
+          if (e <= 2) {
+            setTrackingPhase("arriving");
+          }
+          if (e <= 0) {
+            clearInterval(interval);
+            setTrackingPhase("done");
+          }
+        }, 800);
+      }, 2000);
+    }, 2500);
+    setLoading(false);
   };
+
+  // Tracking status config
+  const phases = [
+    { key: "finding", label: "Finding nearest mechanic...", icon: "search", color: "var(--warning-orange)" },
+    { key: "assigned", label: "Mechanic Assigned!", icon: "engineering", color: "var(--electric-blue)" },
+    { key: "enroute", label: `En Route — ETA ${eta} min`, icon: "directions_car", color: "var(--secondary)" },
+    { key: "arriving", label: "Mechanic is arriving!", icon: "location_on", color: "var(--verification-green)" },
+    { key: "done", label: "Job Complete ✓", icon: "check_circle", color: "var(--verification-green)" },
+  ];
+  const currentPhase = phases.find(p => p.key === trackingPhase);
+
+  if (trackingPhase !== "idle") return (
+    <div className="min-h-screen bg-[var(--background)] flex flex-col">
+      <TopAppBar showBack backHref="/customer/dashboard" />
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 mt-12">
+        <div className="w-full max-w-sm text-center space-y-8">
+          {/* Animated icon */}
+          <div className="w-24 h-24 rounded-full mx-auto flex items-center justify-center shadow-level-2" style={{ background: `${currentPhase?.color}20`, border: `2px solid ${currentPhase?.color}40` }}>
+            <span className="material-symbols-outlined text-5xl" style={{ color: currentPhase?.color, fontVariationSettings: "'FILL' 1" }}>{currentPhase?.icon}</span>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-[var(--primary)] mb-2">{currentPhase?.label}</h2>
+            {trackingPhase === "enroute" && <p className="text-[var(--on-surface-variant)] text-sm">David O. — TushMech Technician</p>}
+          </div>
+          {/* Progress steps */}
+          <div className="flex justify-between items-center">
+            {["finding","assigned","enroute","arriving","done"].map((step, i) => {
+              const phaseOrder = ["finding","assigned","enroute","arriving","done"];
+              const current = phaseOrder.indexOf(trackingPhase);
+              const done = i <= current;
+              return (
+                <div key={step} className="flex items-center">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center transition-all"
+                    style={{ background: done ? "var(--secondary)" : "var(--surface-container-low)", border: done ? "none" : "2px solid var(--outline-variant)" }}>
+                    {done && <span className="material-symbols-outlined text-[14px] text-white" style={{fontVariationSettings:"'FILL' 1"}}>check</span>}
+                  </div>
+                  {i < 4 && <div className="w-10 h-0.5" style={{ background: i < current ? "var(--secondary)" : "var(--outline-variant)" }} />}
+                </div>
+              );
+            })}
+          </div>
+          {trackingPhase === "done" ? (
+            <div className="space-y-3">
+              <p className="text-sm text-[var(--on-surface-variant)]">Your vehicle has been serviced. Rate your experience!</p>
+              <a href="/customer/rate-job" className="block w-full h-14 bg-[var(--primary)] text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                <span className="material-symbols-outlined">star</span>Rate This Job
+              </a>
+              <a href="/customer/dashboard" className="block w-full h-12 border border-[var(--outline-variant)] text-[var(--on-surface-variant)] rounded-xl text-sm font-semibold flex items-center justify-center hover:bg-[var(--surface-container-low)] transition-colors">Back to Dashboard</a>
+            </div>
+          ) : (
+            <div className="bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-4">
+              <p className="text-xs font-semibold text-[var(--on-surface-variant)] uppercase tracking-wider mb-1">Selected Service</p>
+              <p className="text-sm font-bold text-[var(--primary)]">{services[selected].title}</p>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-[var(--surface-container-lowest)] text-[var(--on-surface)] flex flex-col relative overflow-hidden antialiased">

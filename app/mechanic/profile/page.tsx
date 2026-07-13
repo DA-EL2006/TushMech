@@ -109,6 +109,47 @@ export default function MechanicProfile() {
             <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
           </div>
         </section>
+
+        {/* Recent Reviews */}
+        <section className="bg-white rounded-xl shadow-level-1 border border-[var(--outline-variant)] p-6 mb-2">
+          <h2 className="text-sm font-semibold text-[var(--primary)] mb-5 uppercase tracking-wide flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px]">reviews</span>
+            Recent Customer Reviews
+          </h2>
+          <div className="space-y-5">
+            {[
+              { name: "Amara O.", stars: 5, date: "Oct 24", comment: "David was incredibly professional. Fixed my brake issue quickly and explained everything clearly.", tags: ["On time", "Explained clearly"] },
+              { name: "Emeka C.", stars: 5, date: "Oct 19", comment: "Best mechanic on the platform. Came to my office and sorted the car while I worked.", tags: ["Professional", "On time"] },
+              { name: "Fatima B.", stars: 4, date: "Oct 14", comment: "Great service, really knows his stuff. Only minor thing was he arrived 10 mins late.", tags: ["Fixed the issue", "Friendly"] },
+            ].map((r, i, arr) => (
+              <div key={i} className={`${i < arr.length - 1 ? "pb-5 border-b border-[var(--outline-variant)]" : ""}`}>
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-[var(--primary-container)] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                      {r.name.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[var(--on-surface)]">{r.name}</p>
+                      <div className="flex items-center gap-0.5">
+                        {[1,2,3,4,5].map(s => (
+                          <span key={s} className="material-symbols-outlined text-[12px]"
+                            style={{ color: s <= r.stars ? "#FBBF24" : "var(--outline-variant)", fontVariationSettings: s <= r.stars ? "'FILL' 1" : "'FILL' 0" }}>star</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-xs text-[var(--on-surface-variant)]">{r.date}</span>
+                </div>
+                <p className="text-sm text-[var(--on-surface-variant)] leading-relaxed mb-2">{r.comment}</p>
+                <div className="flex gap-1.5 flex-wrap">
+                  {r.tags.map(tag => (
+                    <span key={tag} className="text-[10px] font-semibold text-[var(--secondary)] bg-[var(--secondary)]/10 px-2.5 py-1 rounded-full border border-[var(--secondary)]/20">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
 
       <BottomNavBar activeTab="Profile" items={[

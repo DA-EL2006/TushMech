@@ -9,9 +9,9 @@ interface VendorSideNavProps {
 
 const navItems = [
   { icon: "grid_view", label: "Overview", href: "#" },
-  { icon: "map", label: "Live Map", href: "#" },
   { icon: "inventory_2", label: "Inventory", href: "/vendor/inventory" },
-  { icon: "payments", label: "Escrow Payouts", href: "#" },
+  { icon: "receipt_long", label: "Orders", href: "/vendor/orders" },
+  { icon: "account_balance", label: "Payouts", href: "/vendor/payouts" },
   { icon: "fact_check", label: "QA Reports", href: "#" },
 ];
 

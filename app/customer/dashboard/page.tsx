@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import TopAppBar from "../../components/TopAppBar";
 import BottomNavBar from "../../components/BottomNavBar";
 
@@ -10,8 +11,13 @@ export default function CustomerDashboard() {
       <main className="flex-grow flex flex-col gap-8 p-6 pt-8 md:pt-12 max-w-7xl mx-auto w-full">
         {/* Digital Garage Widget */}
         <section className="flex flex-col gap-4">
-          <h2 className="text-2xl font-semibold text-[var(--primary)]">Your Digital Garage</h2>
-          <div className="bg-[var(--surface-container-lowest)] rounded-xl border border-[var(--outline-variant)] shadow-level-1 p-6 flex flex-col md:flex-row gap-6 items-center relative overflow-hidden">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold text-[var(--primary)]">Your Digital Garage</h2>
+            <Link href="/customer/garage" className="text-sm font-semibold text-[var(--secondary)] hover:underline flex items-center gap-1">
+              View All <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </Link>
+          </div>
+          <Link href="/customer/garage" className="bg-[var(--surface-container-lowest)] rounded-xl border border-[var(--outline-variant)] shadow-level-1 p-6 flex flex-col md:flex-row gap-6 items-center relative overflow-hidden hover:border-[var(--secondary)] transition-colors">
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--surface-bright)] to-transparent opacity-50 z-0 pointer-events-none" />
             <div className="relative z-10 w-full md:w-1/3 aspect-[4/3] rounded-lg overflow-hidden border border-[var(--outline-variant)]">
               <Image className="w-full h-full object-cover" src="/images/car_camry.jpg" alt="2016 Toyota Camry" fill sizes="(max-width: 768px) 100vw, 33vw" />
@@ -44,12 +50,12 @@ export default function CustomerDashboard() {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </section>
 
         {/* Quick Actions */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <button className="bg-[var(--primary-container)] text-[var(--on-primary)] rounded-xl p-6 flex flex-col justify-between aspect-[2/1] md:aspect-[4/3] shadow-level-2 hover:shadow-level-3 transition-all group relative overflow-hidden text-left border border-[var(--primary-container)]">
+          <Link href="/customer/booking" className="bg-[var(--primary-container)] text-[var(--on-primary)] rounded-xl p-6 flex flex-col justify-between aspect-[2/1] md:aspect-[4/3] shadow-level-2 hover:shadow-level-3 transition-all group relative overflow-hidden text-left border border-[var(--primary-container)]">
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10 pointer-events-none" />
             <div className="bg-white/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-white text-[32px]">handyman</span>
@@ -58,8 +64,8 @@ export default function CustomerDashboard() {
               <h3 className="text-2xl font-semibold text-white mb-1">Request Mobile Mechanic</h3>
               <p className="text-base text-[var(--inverse-primary)] opacity-80">On-demand service at your location</p>
             </div>
-          </button>
-          <button className="bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-6 flex flex-col justify-between aspect-[2/1] md:aspect-[4/3] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all group text-left">
+          </Link>
+          <Link href="/customer/shop" className="bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-6 flex flex-col justify-between aspect-[2/1] md:aspect-[4/3] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all group text-left">
             <div className="bg-[var(--secondary-container)]/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <span className="material-symbols-outlined text-[var(--secondary)] text-[32px]">shopping_cart</span>
             </div>
@@ -67,7 +73,7 @@ export default function CustomerDashboard() {
               <h3 className="text-2xl font-semibold text-[var(--primary)] mb-1">Shop Spare Parts</h3>
               <p className="text-base text-[var(--on-surface-variant)]">Verified OEM &amp; aftermarket parts</p>
             </div>
-          </button>
+          </Link>
         </section>
 
         {/* Upcoming Maintenance */}
@@ -103,7 +109,12 @@ export default function CustomerDashboard() {
           </div>
         </section>
       </main>
-      <BottomNavBar activeTab="Home" />
+      <BottomNavBar activeTab="Home" items={[
+        { icon: "home_app_logo", label: "Home", href: "/customer/dashboard" },
+        { icon: "garage", label: "Garage", href: "/customer/garage" },
+        { icon: "shopping_bag", label: "Market", href: "/customer/shop" },
+        { icon: "person", label: "Profile", href: "/customer/dashboard" },
+      ]} />
     </div>
   );
 }
