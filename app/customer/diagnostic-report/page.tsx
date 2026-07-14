@@ -66,7 +66,7 @@ export default function DiagnosticReport() {
       </main>
 
       <div className="fixed bottom-0 left-0 w-full p-6 bg-[var(--surface-bright)]/95 backdrop-blur-sm border-t border-[var(--outline-variant)] z-40 pb-safe shadow-[0_-8px_16px_rgba(0,0,0,0.02)]">
-        <button className="w-full h-14 bg-[var(--primary)] text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg active:shadow-sm active:scale-[0.98] transition-all relative overflow-hidden group">
+        <button className="w-full h-14 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg active:shadow-sm active:scale-[0.98] transition-all relative overflow-hidden group">
           <div className="absolute inset-0 border border-white/20 rounded-xl group-active:border-transparent transition-colors" />
           <span className="material-symbols-outlined text-[20px]">send</span>
           Generate &amp; Send Report

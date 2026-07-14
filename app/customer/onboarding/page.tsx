@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 interface CarDetails {
   id: string;
@@ -21,6 +22,13 @@ interface CarDetails {
 
 export default function CustomerOnboarding() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
   const [cars, setCars] = useState<CarDetails[]>([{
     id: "1", make: "", model: "", year: "", vin: "", engine: "", transmission: "",
     drivetrain: "", fuelType: "", mileage: "", licensePlate: "", color: "", knownIssues: ""
@@ -47,11 +55,63 @@ export default function CustomerOnboarding() {
     setCars(cars.map(car => car.id === id ? { ...car, [field]: value } : car));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Persist garage data so /customer/garage and /customer/shop can read it
-    localStorage.setItem("tushmech_garage", JSON.stringify(cars));
-    router.push("/customer/dashboard");
+    setLoading(true);
+    try {
+      // 1. Register User
+      const regRes = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...profile, role: "CUSTOMER" }),
+      });
+      
+      if (!regRes.ok) {
+        const error = await regRes.json();
+        alert(`Registration failed: ${error.message}`);
+        setLoading(false);
+        return;
+      }
+
+      // 2. Log in User
+      const signInRes = await signIn("credentials", {
+        email: profile.email,
+        password: profile.password,
+        redirect: false,
+      });
+
+      if (signInRes?.error) {
+        alert("Failed to sign in after registration.");
+        setLoading(false);
+        return;
+      }
+
+      // 3. Save Vehicles
+      for (const car of cars) {
+        if (!car.make || !car.model) continue;
+        await fetch("/api/vehicles", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            make: car.make,
+            model: car.model,
+            year: car.year,
+            licensePlate: car.licensePlate || "PENDING",
+            vin: car.vin,
+            currentMileage: car.mileage,
+          }),
+        });
+      }
+
+      // Fallback for demo UX
+      localStorage.setItem("tushmech_garage", JSON.stringify(cars));
+      router.push("/customer/dashboard");
+    } catch (err) {
+      console.error(err);
+      alert("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -71,6 +131,35 @@ export default function CustomerOnboarding() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
+          
+          {/* Personal Details Section */}
+          <div className="bg-[var(--surface-container-lowest)] rounded-2xl shadow-level-2 border border-[var(--outline-variant)] overflow-hidden">
+            <div className="bg-[var(--deep-navy)] px-6 py-4">
+              <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                <span className="material-symbols-outlined text-[var(--secondary)]">person</span>
+                Personal Details
+              </h3>
+            </div>
+            <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Full Name *</label>
+                <input type="text" required value={profile.fullName} onChange={e => setProfile({...profile, fullName: e.target.value})} placeholder="e.g. John Doe" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Phone Number *</label>
+                <input type="tel" required value={profile.phone} onChange={e => setProfile({...profile, phone: e.target.value})} placeholder="0800 000 0000" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Email Address *</label>
+                <input type="email" required value={profile.email} onChange={e => setProfile({...profile, email: e.target.value})} placeholder="you@example.com" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Password *</label>
+                <input type="password" required value={profile.password} onChange={e => setProfile({...profile, password: e.target.value})} placeholder="••••••••" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
+              </div>
+            </div>
+          </div>
+
           {cars.map((car, index) => (
             <div key={car.id} className="bg-[var(--surface-container-lowest)] rounded-2xl shadow-level-2 border border-[var(--outline-variant)] overflow-hidden relative transition-all">
               
@@ -206,10 +295,11 @@ export default function CustomerOnboarding() {
             </button>
             <button 
               type="submit" 
-              className="h-14 px-8 bg-[var(--secondary)] text-white rounded-xl text-lg font-semibold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-[0.98] flex-grow"
+              disabled={loading}
+              className="h-14 px-8 bg-[var(--secondary)] text-[var(--on-secondary)] rounded-xl text-lg font-semibold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-[0.98] flex-grow disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              <span className="material-symbols-outlined">garage</span>
-              Save Garage & Continue to Dashboard
+              {loading ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : <span className="material-symbols-outlined">garage</span>}
+              {loading ? "Saving Garage..." : "Save Garage & Continue to Dashboard"}
             </button>
           </div>
         </form>

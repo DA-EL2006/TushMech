@@ -83,7 +83,7 @@ export default function AdminSettings() {
           {/* Actions */}
           <div className="flex justify-end gap-4 border-t border-[var(--outline-variant)] pt-6">
             <button className="px-6 py-2.5 border border-[var(--outline-variant)] rounded-lg text-sm font-semibold text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-low)] transition-colors">Discard Changes</button>
-            <button className="px-6 py-2.5 bg-[var(--primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2">
+            <button className="px-6 py-2.5 bg-[var(--primary)] text-[var(--on-primary)] rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px]">save</span> Save Settings
             </button>
           </div>

@@ -34,7 +34,7 @@ export default function QAQueue() {
           </div>
           
           <div className="flex gap-2 mt-4 overflow-x-auto pb-1 hide-scrollbar">
-            <button className="px-4 py-1.5 rounded-full border border-[var(--primary)] bg-[var(--primary)] text-white text-xs font-semibold whitespace-nowrap">All Reports</button>
+            <button className="px-4 py-1.5 rounded-full border border-[var(--primary)] bg-[var(--primary)] text-[var(--on-primary)] text-xs font-semibold whitespace-nowrap">All Reports</button>
             <button className="px-4 py-1.5 rounded-full border border-[var(--outline-variant)] bg-white text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-low)] text-xs font-semibold whitespace-nowrap flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[var(--warning-orange)]" /> Urgent (3)
             </button>
@@ -86,7 +86,7 @@ export default function QAQueue() {
                 </div>
               </div>
               <div className="border-t border-[var(--outline-variant)] p-4 bg-[var(--surface-bright)] flex gap-3">
-                <Link href="/admin/review" className="flex-1 h-12 bg-[var(--secondary)] hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                <Link href="/admin/review" className="flex-1 h-12 bg-[var(--secondary)] hover:bg-blue-700 text-[var(--on-secondary)] text-sm font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">visibility</span> Review Full Report
                 </Link>
                 <button className="w-12 h-12 border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:text-[var(--verification-green)] hover:border-[var(--verification-green)] hover:bg-[var(--verification-green)]/10 rounded-lg transition-colors flex items-center justify-center">
@@ -115,7 +115,7 @@ export default function QAQueue() {
                   <div className="bg-[var(--background)] rounded-lg p-3 border border-[var(--surface-variant)]">
                     <span className="block text-xs text-[var(--on-surface-variant)] mb-1">Mechanic</span>
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[var(--primary)] text-white flex items-center justify-center text-[10px] font-bold">MR</div>
+                      <div className="w-6 h-6 rounded-full bg-[var(--primary)] text-[var(--on-primary)] flex items-center justify-center text-[10px] font-bold">MR</div>
                       <span className="text-sm font-semibold">Mike Ross</span>
                     </div>
                   </div>

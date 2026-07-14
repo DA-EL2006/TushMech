@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import BottomNavBar from "../../components/BottomNavBar";
-import Pusher from "pusher-js";
+import { pusherClient } from "@/app/lib/pusherClient";
 import { useSession } from "next-auth/react";
 
 export default function DispatchJobCard() {
@@ -10,29 +11,56 @@ export default function DispatchJobCard() {
   const [activeJob, setActiveJob] = useState<any>(null);
   const [swiped, setSwiped] = useState(false);
   const [swipeProgress, setSwipeProgress] = useState(0);
+  const [partsRequested, setPartsRequested] = useState(false);
+  const [jobCompleted, setJobCompleted] = useState(false);
 
   useEffect(() => {
     if (!session?.user?.id) return;
 
-    // Fetch initial active job if any (For MVP we assume none or fetch from a new GET route)
-    // Here we will just rely on the WebSocket push for the demo.
-    
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-    });
+    // Fetch initial PENDING jobs
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch("/api/jobs");
+        if (res.ok) {
+          const data = await res.json();
+          const pendingJobs = data.jobs.filter((j: any) => j.status === "PENDING" || j.status === "ASSIGNED");
+          if (pendingJobs.length > 0) {
+            const firstJob = pendingJobs[0];
+            // Map API format to component format
+            setActiveJob({
+              id: firstJob.id,
+              customer_name: firstJob.customer?.first_name ? `${firstJob.customer.first_name} ${firstJob.customer.last_name || ''}` : "Customer",
+              vehicle: `${firstJob.vehicle.year} ${firstJob.vehicle.make} ${firstJob.vehicle.model}`,
+              license_plate: firstJob.vehicle.license_plate,
+              issue: firstJob.reported_issue,
+              address: firstJob.address,
+              status: firstJob.status
+            });
+            if (firstJob.status === "ASSIGNED") {
+              setSwiped(true);
+              setSwipeProgress(100);
+            }
+          }
+        }
+      } catch (err) {}
+    };
+    fetchJobs();
 
-    const channelName = `mechanic-${session.user.id}`;
-    const channel = pusher.subscribe(channelName);
+    // Listen to new jobs on the general mechanics channel
+    const channel = pusherClient?.subscribe("mechanics-channel");
 
-    channel.bind("job_assigned", (data: any) => {
-      setActiveJob(data.job);
+    channel?.bind("new_job", (data: any) => {
+      // If no active job, set this as active
+      setActiveJob((prev: any) => {
+        if (!prev) return data.job;
+        return prev;
+      });
       setSwiped(false);
       setSwipeProgress(0);
       
-      // Optional: Play a sound or show a system notification
       if (typeof window !== "undefined" && "Notification" in window) {
         if (Notification.permission === "granted") {
-          new Notification("New Job Assigned!", { body: `Job at ${data.job.address}` });
+          new Notification("New Job Request!", { body: `Job at ${data.job.address}` });
         } else if (Notification.permission !== "denied") {
           Notification.requestPermission();
         }
@@ -40,15 +68,66 @@ export default function DispatchJobCard() {
     });
 
     return () => {
-      pusher.unsubscribe(channelName);
+      pusherClient?.unsubscribe("mechanics-channel");
     };
   }, [session?.user?.id]);
 
-  const handleDrag = (e: any) => {
+  const handleDrag = async (e: any) => {
     if (!swiped && activeJob) {
       setSwipeProgress(100);
-      setTimeout(() => setSwiped(true), 300);
-      // Here you would trigger an API call to update status to "IN_PROGRESS" / "DIAGNOSING"
+      setSwiped(true);
+      
+      try {
+        await fetch(`/api/jobs/${activeJob.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "ASSIGNED" })
+        });
+        alert("Job Accepted! Customer has been notified.");
+      } catch (error) {
+        console.error("Failed to accept job", error);
+      }
+    }
+  };
+
+  const handleRequestParts = async () => {
+    try {
+      const res = await fetch("/api/escrow/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          job_id: activeJob.id,
+          part_name: "Brembo Brake Pad Set",
+          amount: 32000
+        })
+      });
+      if (res.ok) {
+        setPartsRequested(true);
+        alert("Parts requested from Vendor on Escrow Credit!");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleCompleteJob = async () => {
+    try {
+      const res = await fetch("/api/escrow/release", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          job_id: activeJob.id,
+          labor_cost: 15000
+        })
+      });
+      if (res.ok) {
+        setJobCompleted(true);
+        alert("Job Completed! Escrow released to your Wallet and Vendor.");
+        setActiveJob(null);
+        setSwiped(false);
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -163,13 +242,33 @@ export default function DispatchJobCard() {
         {/* Swipe to Confirm */}
         {activeJob && (
           <div className="mt-auto px-6 pb-6 pt-2">
-            <div className="swipe-track shadow-level-2 border-2 border-[var(--outline-variant)]/50 cursor-pointer" onClick={handleDrag}>
-              <div className="swipe-progress" style={{ width: `${swipeProgress}%` }} />
-              <div className="swipe-text opacity-100 transition-opacity" style={{ opacity: swiped ? 0 : 1 }}>{swiped ? "" : "TAP TO START DIAGNOSTICS"}</div>
-              <div className={`swipe-thumb shadow-level-1 transition-all ${swiped ? 'bg-[var(--electric-blue)] translate-x-[calc(100vw-112px)] md:translate-x-[552px]' : ''}`}>
-                <span className="material-symbols-outlined text-[32px]">{swiped ? "check" : "chevron_right"}</span>
+            {!swiped ? (
+              <div className="swipe-track shadow-level-2 border-2 border-[var(--outline-variant)]/50 cursor-pointer" onClick={handleDrag}>
+                <div className="swipe-progress" style={{ width: `${swipeProgress}%` }} />
+                <div className="swipe-text opacity-100 transition-opacity">TAP TO ACCEPT JOB</div>
+                <div className="swipe-thumb shadow-level-1 transition-all">
+                  <span className="material-symbols-outlined text-[32px]">chevron_right</span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <Link href={`/mechanic/write-report?id=${activeJob.id}`} className="w-full h-14 bg-[var(--verification-green)] text-white rounded-xl font-bold tracking-wide flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-all active:scale-95">
+                  <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>mic</span>
+                  BEGIN DIAGNOSTICS
+                </Link>
+                {!partsRequested ? (
+                  <button onClick={handleRequestParts} className="w-full h-14 bg-[var(--warning-orange)] text-white rounded-xl font-bold tracking-wide flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-all active:scale-95">
+                    <span className="material-symbols-outlined text-[24px]">inventory_2</span>
+                    REQUEST PARTS ON CREDIT
+                  </button>
+                ) : (
+                  <button onClick={handleCompleteJob} className="w-full h-14 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl font-bold tracking-wide flex items-center justify-center gap-2 shadow-sm hover:opacity-90 transition-all active:scale-95">
+                    <span className="material-symbols-outlined text-[24px]">check_circle</span>
+                    COMPLETE JOB & RELEASE ESCROW
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         )}
       </main>

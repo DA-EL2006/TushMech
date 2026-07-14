@@ -49,7 +49,7 @@ export default function VendorPayouts() {
               <p className="text-xs text-[var(--on-surface-variant)] mt-1">From 1 pending cycle</p>
               {!requested ? (
                 <button onClick={() => setRequested(true)}
-                  className="mt-4 w-full h-10 bg-[var(--secondary)] text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
+                  className="mt-4 w-full h-10 bg-[var(--secondary)] text-[var(--on-secondary)] rounded-lg text-sm font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5">
                   <span className="material-symbols-outlined text-[16px]">account_balance</span>Request Payout
                 </button>
               ) : (

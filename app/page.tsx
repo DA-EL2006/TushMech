@@ -71,6 +71,12 @@ export default function Home() {
             <p className="text-lg text-[var(--on-surface-variant)] max-w-2xl mx-auto">
               On-demand mobile mechanics, verified spare parts, embedded financing, and fleet-grade diagnostics — all in one premium O2O platform.
             </p>
+            <div className="mt-8 flex justify-center">
+              <Link href="/sos" className="w-full max-w-md h-16 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-bold text-xl tracking-wide flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all active:scale-95 border-2 border-red-500 hover:border-red-400">
+                <span className="material-symbols-outlined text-[32px]" style={{ fontVariationSettings: "'FILL' 1" }}>emergency</span>
+                FRICTIONLESS SOS
+              </Link>
+            </div>
           </section>
 
           {/* Role Cards Grid */}

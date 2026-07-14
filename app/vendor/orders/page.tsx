@@ -1,16 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import VendorSideNav from "../../components/VendorSideNav";
 
 type Status = "All" | "Pending" | "Shipped" | "Delivered" | "Disputed";
 
-const orders = [
+const MOCK_ORDERS = [
   { id: "ORD-8821", part: "Brembo Brake Pad Set — Front", customer: "Amara Okafor", date: "Oct 24, 2024", amount: 32000, status: "Pending", address: "14 Gwarinpa Estate, Abuja", escrow: "Held", qty: 1 },
   { id: "ORD-8819", part: "Castrol Edge 5W-30 (5L)", customer: "Emeka Chukwu", date: "Oct 23, 2024", amount: 22000, status: "Shipped", address: "Plot 45, Wuse Zone 5, Abuja", escrow: "Held", qty: 2 },
   { id: "ORD-8815", part: "Bosch Iridium Spark Plugs", customer: "Fatima Bello", date: "Oct 22, 2024", amount: 14500, status: "Delivered", address: "22 Maitama Close, Abuja", escrow: "Released", qty: 1 },
-  { id: "ORD-8810", part: "Mann-Filter Cabin Air Filter", customer: "Uche Eze", date: "Oct 21, 2024", amount: 7500, status: "Delivered", address: "7 Kubwa New Layout, Abuja", escrow: "Released", qty: 3 },
-  { id: "ORD-8807", part: "Denso Oxygen Sensor — Front", customer: "Aisha Musa", date: "Oct 20, 2024", amount: 18500, status: "Disputed", address: "33 Garki Area 11, Abuja", escrow: "Frozen", qty: 1 },
-  { id: "ORD-8804", part: "Bosch Alternator Belt", customer: "Tunde Adeleke", date: "Oct 19, 2024", amount: 12500, status: "Shipped", address: "5 Jabi District, Abuja", escrow: "Held", qty: 1 },
 ];
 
 const statusColors: Record<string, string> = {
@@ -27,9 +24,47 @@ const escrowColors: Record<string, string> = {
 };
 
 export default function VendorOrders() {
+  const [orders, setOrders] = useState<any[]>(MOCK_ORDERS);
   const [filter, setFilter] = useState<Status>("All");
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [shipped, setShipped] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/vendor/orders")
+      .then(res => res.json())
+      .then(data => {
+        if (data.orders && data.orders.length > 0) {
+          const formatted = data.orders.map((o: any) => ({
+            id: o.id.substring(0,8).toUpperCase(),
+            raw_id: o.id,
+            part: o.part_name,
+            customer: o.job?.customer ? `${o.job.customer.first_name} ${o.job.customer.last_name || ''}` : "Customer",
+            date: new Date(o.created_at).toLocaleDateString(),
+            amount: o.amount,
+            status: o.status.charAt(0).toUpperCase() + o.status.slice(1).toLowerCase(),
+            address: "Escrow Locked Address",
+            escrow: o.escrow_status.charAt(0).toUpperCase() + o.escrow_status.slice(1).toLowerCase(),
+            qty: o.quantity
+          }));
+          setOrders(formatted);
+        }
+      });
+  }, []);
+
+  const handleMarkShipped = async (orderId: string, rawId: string) => {
+    try {
+      const res = await fetch("/api/vendor/orders", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_id: rawId, status: "SHIPPED" })
+      });
+      if (res.ok) {
+        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: "Shipped" } : o));
+        alert("Order marked as SHIPPED!");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const filtered = filter === "All" ? orders : orders.filter(o => o.status === filter);
 
@@ -120,19 +155,19 @@ export default function VendorOrders() {
                                   {order.escrow === "Frozen" && "Funds frozen pending dispute resolution."}
                                 </p>
                               </div>
-                              <div className="flex flex-col gap-2">
-                                <p className="text-xs font-semibold text-[var(--on-surface-variant)] uppercase tracking-wider mb-1">Actions</p>
-                                {order.status === "Pending" && !shipped.includes(order.id) && (
-                                  <button onClick={() => setShipped(p => [...p, order.id])}
-                                    className="h-9 px-4 bg-[var(--secondary)] text-white text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 w-fit">
-                                    <span className="material-symbols-outlined text-[16px]">local_shipping</span>Mark as Shipped
-                                  </button>
-                                )}
-                                {(order.status === "Pending" && shipped.includes(order.id)) && (
-                                  <span className="text-xs font-bold text-[var(--verification-green)] flex items-center gap-1">
-                                    <span className="material-symbols-outlined text-[16px]" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>Marked Shipped
-                                  </span>
-                                )}
+                                <div className="flex flex-col gap-2">
+                                  <p className="text-xs font-semibold text-[var(--on-surface-variant)] uppercase tracking-wider mb-1">Actions</p>
+                                  {order.status === "Pending" && (
+                                    <button onClick={() => handleMarkShipped(order.id, order.raw_id)}
+                                      className="h-9 px-4 bg-[var(--secondary)] text-[var(--on-secondary)] text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 w-fit">
+                                      <span className="material-symbols-outlined text-[16px]">local_shipping</span>Mark as Shipped
+                                    </button>
+                                  )}
+                                  {order.status === "Shipped" && (
+                                    <span className="text-xs font-bold text-[var(--verification-green)] flex items-center gap-1">
+                                      <span className="material-symbols-outlined text-[16px]" style={{fontVariationSettings:"'FILL' 1"}}>check_circle</span>Marked Shipped
+                                    </span>
+                                  )}
                                 {order.status === "Disputed" && (
                                   <button className="h-9 px-4 bg-[var(--error)] text-white text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 w-fit">
                                     <span className="material-symbols-outlined text-[16px]">gavel</span>Raise Dispute

@@ -1,8 +1,24 @@
 "use client";
+import { useState, useEffect } from "react";
 import BottomNavBar from "../../components/BottomNavBar";
 import TopAppBar from "../../components/TopAppBar";
 
 export default function MechanicWallet() {
+  const [wallet, setWallet] = useState({ available_balance: 0, escrow_balance: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/wallet")
+      .then(res => res.json())
+      .then(data => {
+        if (data.wallet) {
+          setWallet(data.wallet);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   return (
     <div className="min-h-screen bg-[var(--background)] pb-20">
       <TopAppBar title="Wallet" centered={true} showNotification={true} />
@@ -14,7 +30,9 @@ export default function MechanicWallet() {
           <div className="flex justify-between items-start mb-8 relative z-10">
             <div>
               <p className="text-[var(--primary-fixed-dim)] text-sm font-medium mb-1 uppercase tracking-wider">Available Balance</p>
-              <h2 className="text-4xl font-bold tracking-tight">₦ 124,500</h2>
+              <h2 className="text-4xl font-bold tracking-tight">
+                {loading ? "..." : `₦ ${wallet.available_balance.toLocaleString()}`}
+              </h2>
             </div>
             <div className="bg-white/10 rounded-lg p-2 border border-white/20">
               <span className="material-symbols-outlined text-white">account_balance_wallet</span>
@@ -35,13 +53,15 @@ export default function MechanicWallet() {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white rounded-xl p-4 border border-[var(--outline-variant)] shadow-sm">
             <p className="text-xs text-[var(--on-surface-variant)] font-semibold uppercase tracking-wider mb-1">Today's Earnings</p>
-            <p className="text-xl font-bold text-[var(--primary)]">₦ 32,000</p>
-            <p className="text-[10px] text-[var(--verification-green)] font-semibold mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[12px]">trending_up</span> +12% vs yesterday</p>
+            <p className="text-xl font-bold text-[var(--primary)]">₦ 0</p>
+            <p className="text-[10px] text-[var(--verification-green)] font-semibold mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[12px]">trending_up</span> Just started!</p>
           </div>
           <div className="bg-white rounded-xl p-4 border border-[var(--outline-variant)] shadow-sm">
-            <p className="text-xs text-[var(--on-surface-variant)] font-semibold uppercase tracking-wider mb-1">Pending Clearance</p>
-            <p className="text-xl font-bold text-[var(--primary)]">₦ 45,000</p>
-            <p className="text-[10px] text-[var(--warning-orange)] font-semibold mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[12px]">schedule</span> Escrow clearing</p>
+            <p className="text-xs text-[var(--on-surface-variant)] font-semibold uppercase tracking-wider mb-1">Pending Escrow</p>
+            <p className="text-xl font-bold text-[var(--primary)]">
+              {loading ? "..." : `₦ ${wallet.escrow_balance.toLocaleString()}`}
+            </p>
+            <p className="text-[10px] text-[var(--warning-orange)] font-semibold mt-1 flex items-center gap-1"><span className="material-symbols-outlined text-[12px]">schedule</span> Waiting for Job Completion</p>
           </div>
         </div>
 

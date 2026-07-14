@@ -1,9 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import TopAppBar from "../../components/TopAppBar";
-import BottomNavBar from "../../components/BottomNavBar";
-import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { pusherClient } from "@/app/lib/pusherClient";
 
 type Phase = "idle" | "broadcasting" | "matched" | "enroute" | "arrived";
@@ -17,43 +15,49 @@ const EMERGENCY_TYPES = [
   { id: "fuel", icon: "local_gas_station", label: "Out of Fuel", desc: "Stranded — need fuel delivery", color: "#06B6D4" },
 ];
 
-const RESPONDERS = [
-  { name: "David O.", rating: "4.97", eta: 6, dist: "1.2 km", badge: "Certified" },
-  { name: "Mike R.", rating: "4.85", eta: 9, dist: "2.1 km", badge: "Verified" },
-];
-
-export default function SOSPage() {
-  const { data: session } = useSession();
+export default function GuestSOSPage() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [selected, setSelected] = useState<string | null>(null);
+  const [phone, setPhone] = useState("");
+  
+  const [location, setLocation] = useState("Locating...");
+  const [coords, setCoords] = useState<{lat: number, lng: number} | null>(null);
+  const [manualLocation, setManualLocation] = useState("");
+  const [isManualLocation, setIsManualLocation] = useState(false);
+
   const [responder, setResponder] = useState<any>(null);
   const [eta, setEta] = useState(6);
-  const [location] = useState("Wuse Zone 4, Abuja FCT");
-  const [carName, setCarName] = useState("2016 Toyota Camry");
-
   const [jobId, setJobId] = useState<string | null>(null);
+  const [customerId, setCustomerId] = useState<string | null>(null);
 
+  // Attempt Geolocation
   useEffect(() => {
-    // Attempt to fetch user's vehicle from API
-    if (session) {
-      fetch("/api/vehicles").then(res => res.json()).then(data => {
-        if (data.vehicles && data.vehicles.length > 0) {
-          const v = data.vehicles[0];
-          setCarName(`${v.year} ${v.make} ${v.model}`.trim());
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoords({ lat: position.coords.latitude, lng: position.coords.longitude });
+          setLocation(`Lat: ${position.coords.latitude.toFixed(4)}, Lng: ${position.coords.longitude.toFixed(4)}`);
+        },
+        (error) => {
+          console.error("Location error:", error);
+          setLocation("Location access denied.");
+          setIsManualLocation(true);
         }
-      });
+      );
+    } else {
+      setLocation("Geolocation not supported.");
+      setIsManualLocation(true);
     }
-  }, [session]);
+  }, []);
 
+  // Pusher Subscription
   useEffect(() => {
-    if (!session?.user) return;
-    const userId = (session.user as any).id;
+    if (!customerId) return;
     
-    // Subscribe to customer-specific pusher channel
-    const channel = pusherClient?.subscribe(`customer-${userId}`);
+    const channel = pusherClient?.subscribe(`customer-${customerId}`);
     
     channel?.bind("job_updated", (data: any) => {
-      if (jobId && data.job.id !== jobId) return; // Ignore updates for other jobs
+      if (jobId && data.job.id !== jobId) return;
       
       if (data.job.status === "ASSIGNED") {
         setResponder({
@@ -65,7 +69,6 @@ export default function SOSPage() {
         });
         setPhase("matched");
         
-        // Simulate travel time for demo purposes after matched
         setTimeout(() => {
           setPhase("enroute");
           let e = 6;
@@ -79,33 +82,43 @@ export default function SOSPage() {
     });
 
     return () => {
-      pusherClient?.unsubscribe(`customer-${userId}`);
+      pusherClient?.unsubscribe(`customer-${customerId}`);
     };
-  }, [session, jobId]);
+  }, [customerId, jobId]);
 
   const handleSOS = async () => {
-    if (!selected) return;
+    if (!selected) return alert("Please select an emergency type.");
+    if (!phone || phone.length < 10) return alert("Please enter a valid phone number.");
+    if (isManualLocation && !manualLocation.trim()) return alert("Please enter your current location.");
+    
     setPhase("broadcasting");
     
+    const finalAddress = isManualLocation ? manualLocation : location;
+    const finalLat = coords ? coords.lat : 9.0765; // fallback
+    const finalLng = coords ? coords.lng : 7.3986; // fallback
+
     try {
       const emergency = EMERGENCY_TYPES.find(e => e.id === selected);
       const res = await fetch("/api/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          is_guest: true,
+          phone,
           reported_issue: emergency?.label,
-          latitude: 9.0765, // Demo coords for Abuja
-          longitude: 7.3986,
-          address: location,
-          fetch_first_vehicle: true // Tell backend to grab default vehicle
+          latitude: finalLat,
+          longitude: finalLng,
+          address: finalAddress,
         })
       });
       
       if (res.ok) {
         const data = await res.json();
         setJobId(data.job.id);
+        setCustomerId(data.customer_id);
       } else {
-        alert("Failed to broadcast SOS. Make sure you have a vehicle registered.");
+        const errData = await res.json();
+        alert(`Failed to broadcast SOS: ${errData.message}`);
         setPhase("idle");
       }
     } catch (err) {
@@ -127,7 +140,7 @@ export default function SOSPage() {
       </div>
       <h2 className="text-3xl font-bold text-white mb-3 text-center">SOS Broadcasted</h2>
       <p className="text-red-300 text-center mb-2">Alerting all nearby TushMech responders...</p>
-      <p className="text-white/50 text-sm text-center">{location}</p>
+      <p className="text-white/50 text-sm text-center">{isManualLocation ? manualLocation : location}</p>
       <div className="mt-8 flex gap-1">
         {[0,1,2].map(i => <div key={i} className="w-2 h-2 rounded-full bg-red-500 animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />)}
       </div>
@@ -136,8 +149,10 @@ export default function SOSPage() {
 
   if (phase === "matched" || phase === "enroute") return (
     <div className="min-h-screen bg-[var(--background)] flex flex-col">
-      <TopAppBar showBack backHref="/customer/dashboard" />
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 mt-12 space-y-6">
+      <header className="px-6 py-4 flex items-center justify-center border-b border-[var(--outline-variant)]">
+        <Image src="/images/tushmech_logo.jpg" alt="Logo" width={32} height={32} className="rounded-md" />
+      </header>
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 space-y-6">
         <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-2">
           <span className="material-symbols-outlined text-green-600 text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>
             {phase === "matched" ? "engineering" : "directions_car"}
@@ -149,14 +164,14 @@ export default function SOSPage() {
           </h2>
           {responder && <p className="text-[var(--on-surface-variant)] mt-1">{responder.name} · ⭐ {responder.rating} · {responder.dist} away</p>}
         </div>
-        <div className="w-full max-w-sm bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-2xl p-5 space-y-4">
+        <div className="w-full max-w-sm bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-2xl p-5 space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-sm text-[var(--on-surface-variant)]">Emergency Type</span>
             <span className="text-sm font-bold text-[var(--primary)]">{emergency?.label}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-[var(--on-surface-variant)]">Your Location</span>
-            <span className="text-sm font-semibold text-[var(--primary)]">{location}</span>
+            <span className="text-sm font-semibold text-[var(--primary)] truncate ml-4">{isManualLocation ? manualLocation : location}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-[var(--on-surface-variant)]">TushMech Badge</span>
@@ -179,36 +194,70 @@ export default function SOSPage() {
         <h2 className="text-2xl font-bold text-[var(--primary)]">Responder Arrived!</h2>
         <p className="text-[var(--on-surface-variant)] mt-1">{responder?.name} is with you. Stay safe.</p>
       </div>
-      <Link href="/customer/rate-job" className="w-full max-w-xs h-14 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-        <span className="material-symbols-outlined">star</span>Rate This Response
+      <Link href="/login" className="w-full max-w-xs h-14 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+        <span className="material-symbols-outlined">person</span>Complete Registration
       </Link>
-      <Link href="/customer/dashboard" className="text-sm text-[var(--on-surface-variant)] hover:underline">Back to Dashboard</Link>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[var(--background)] pb-24">
-      <TopAppBar showBack backHref="/customer/dashboard" />
-      <main className="pt-16 max-w-lg mx-auto px-4">
+    <div className="min-h-screen bg-[var(--background)]">
+      <header className="px-4 h-16 flex items-center gap-3 border-b border-[var(--outline-variant)] sticky top-0 bg-[var(--surface-bright)] z-10">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-[var(--primary)]">arrow_back</span>
+          <span className="font-semibold text-[var(--primary)]">Back</span>
+        </Link>
+      </header>
+
+      <main className="py-8 max-w-lg mx-auto px-4 pb-24">
         {/* SOS Header */}
-        <div className="flex flex-col items-center py-8 text-center">
+        <div className="flex flex-col items-center mb-8 text-center">
           <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center mb-4 shadow-lg">
             <span className="material-symbols-outlined text-white text-[36px]" style={{ fontVariationSettings: "'FILL' 1" }}>emergency</span>
           </div>
-          <h1 className="text-3xl font-bold text-[var(--primary)]">SOS Emergency</h1>
-          <p className="text-sm text-[var(--on-surface-variant)] mt-2">Select your emergency type and we'll dispatch the nearest TushMech responder instantly.</p>
-          <div className="flex items-center gap-1.5 mt-3 bg-[var(--surface-container-low)] px-4 py-2 rounded-full border border-[var(--outline-variant)]">
-            <span className="material-symbols-outlined text-[var(--secondary)] text-[16px]">location_on</span>
-            <span className="text-xs font-semibold text-[var(--on-surface-variant)]">{location}</span>
+          <h1 className="text-3xl font-bold text-[var(--primary)]">Frictionless SOS</h1>
+          <p className="text-sm text-[var(--on-surface-variant)] mt-2">No account required. Request immediate assistance and we'll dispatch a verified TushMech responder instantly.</p>
+        </div>
+
+        {/* Contact & Location */}
+        <div className="bg-[var(--surface-container-lowest)] p-5 rounded-2xl border border-[var(--outline-variant)] shadow-sm mb-6 space-y-4">
+          <div>
+            <label className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider mb-1 block">Phone Number *</label>
+            <input 
+              type="tel" 
+              placeholder="e.g. 08012345678" 
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full h-12 px-4 rounded-xl border border-[var(--outline-variant)] bg-[var(--surface-bright)] text-[var(--primary)] text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all"
+            />
           </div>
-          <div className="flex items-center gap-1.5 mt-2 bg-[var(--surface-container-low)] px-4 py-2 rounded-full border border-[var(--outline-variant)]">
-            <span className="material-symbols-outlined text-[var(--secondary)] text-[16px]">directions_car</span>
-            <span className="text-xs font-semibold text-[var(--on-surface-variant)]">{carName}</span>
+
+          <div>
+            <label className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider mb-1 block">Current Location</label>
+            {isManualLocation ? (
+              <input 
+                type="text" 
+                placeholder="Enter nearby landmark or address..." 
+                value={manualLocation}
+                onChange={(e) => setManualLocation(e.target.value)}
+                className="w-full h-12 px-4 rounded-xl border border-[var(--outline-variant)] bg-[var(--surface-bright)] text-[var(--primary)] text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all"
+              />
+            ) : (
+              <div className="flex items-center justify-between h-12 px-4 rounded-xl border border-[var(--outline-variant)] bg-[var(--surface-container-low)]">
+                <span className="text-sm text-[var(--primary)] font-medium truncate mr-2">{location}</span>
+                <span className="material-symbols-outlined text-[var(--secondary)] text-[18px]">my_location</span>
+              </div>
+            )}
+            {!isManualLocation && (
+              <button onClick={() => setIsManualLocation(true)} className="text-xs text-[var(--secondary)] font-semibold mt-2 hover:underline">
+                Location inaccurate? Type it manually
+              </button>
+            )}
           </div>
         </div>
 
         {/* Emergency type grid */}
-        <h2 className="text-sm font-bold text-[var(--on-surface-variant)] uppercase tracking-wider mb-3">What's the emergency?</h2>
+        <h2 className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider mb-3 px-1">What's the emergency?</h2>
         <div className="grid grid-cols-2 gap-3 mb-8">
           {EMERGENCY_TYPES.map(e => (
             <button key={e.id} onClick={() => setSelected(e.id)}
@@ -222,21 +271,12 @@ export default function SOSPage() {
         </div>
 
         {/* SOS Button */}
-        <button onClick={handleSOS} disabled={!selected}
-          className={`w-full h-16 rounded-2xl font-bold text-lg tracking-wide flex items-center justify-center gap-3 transition-all shadow-lg ${selected ? "bg-red-600 hover:bg-red-700 text-white active:scale-[0.98]" : "bg-[var(--surface-container-low)] text-[var(--on-surface-variant)] cursor-not-allowed opacity-60"}`}>
+        <button onClick={handleSOS} disabled={!selected || !phone}
+          className={`w-full h-16 rounded-2xl font-bold text-lg tracking-wide flex items-center justify-center gap-3 transition-all shadow-lg ${selected && phone ? "bg-red-600 hover:bg-red-700 text-white active:scale-[0.98]" : "bg-[var(--surface-container-low)] text-[var(--on-surface-variant)] cursor-not-allowed opacity-60"}`}>
           <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>emergency</span>
-          DISPATCH EMERGENCY RESPONDER
+          SEND HELP NOW
         </button>
-        <p className="text-center text-xs text-[var(--on-surface-variant)] mt-3">
-          TushMech responders are active 24/7 across Abuja FCT
-        </p>
       </main>
-      <BottomNavBar activeTab="Home" items={[
-        { icon: "home_app_logo", label: "Home", href: "/customer/dashboard" },
-        { icon: "garage", label: "Garage", href: "/customer/garage" },
-        { icon: "shopping_bag", label: "Market", href: "/customer/shop" },
-        { icon: "person", label: "Profile", href: "/customer/dashboard" },
-      ]} />
     </div>
   );
 }

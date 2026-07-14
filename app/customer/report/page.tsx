@@ -44,7 +44,7 @@ export default function CustomerDiagnosticReport() {
         
         {/* Top Summary Card */}
         <section className="bg-white rounded-2xl shadow-level-1 border border-[var(--outline-variant)] overflow-hidden mb-6">
-          <div className="bg-[var(--primary)] text-white p-6 relative overflow-hidden">
+          <div className="bg-[var(--primary)] text-[var(--on-primary)] p-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
             <div className="flex justify-between items-start mb-4 relative z-10">
               <div>

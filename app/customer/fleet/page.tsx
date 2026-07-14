@@ -73,7 +73,7 @@ export default function FleetModule() {
                   <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[var(--on-surface-variant)] text-[20px]">search</span>
                   <input type="text" placeholder="Search by plate or ID..." className="w-full h-10 pl-10 pr-4 rounded-lg border border-[var(--outline-variant)] bg-[var(--surface-container-lowest)] text-sm focus:border-[var(--secondary)] outline-none" />
                 </div>
-                <button className="h-10 px-4 ml-3 bg-[var(--secondary)] text-white text-sm font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                <button className="h-10 px-4 ml-3 bg-[var(--secondary)] text-[var(--on-secondary)] text-sm font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
                   <span className="material-symbols-outlined text-[18px]">add</span> Add Vehicle
                 </button>
               </div>
@@ -136,7 +136,7 @@ export default function FleetModule() {
                     <p className="text-4xl font-bold">₦450,000</p>
                     <p className="text-white/70 text-xs mt-2">Due by 15 Nov 2024</p>
                   </div>
-                  <button className="bg-[var(--secondary)] text-white px-6 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity shadow-sm whitespace-nowrap">
+                  <button className="bg-[var(--secondary)] text-[var(--on-secondary)] px-6 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity shadow-sm whitespace-nowrap">
                     Pay Current Invoice
                   </button>
                 </div>

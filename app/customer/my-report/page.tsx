@@ -145,7 +145,7 @@ export default function MyReport() {
         <button className="flex-1 h-12 border-2 border-[var(--primary)] text-[var(--primary)] rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-[var(--surface-container-low)] transition-colors">
           <span className="material-symbols-outlined text-[18px]">help</span>Second Opinion
         </button>
-        <a href="/customer/checkout" className="flex-1 h-12 bg-[var(--primary)] text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+        <a href="/customer/checkout" className="flex-1 h-12 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
           <span className="material-symbols-outlined text-[18px]">payments</span>Approve &amp; Pay
         </a>
       </div>

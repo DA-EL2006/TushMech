@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import ThemeToggle from "./ThemeToggle";
 
 interface TopAppBarProps {
   title?: string;
@@ -46,6 +47,7 @@ export default function TopAppBar({
       </div>
       {centered && <div className="flex-1" />}
       <div className="flex items-center gap-2">
+        <ThemeToggle />
         {showNotification && (
           <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[var(--surface-container-low)] transition-colors active:scale-95">
             <span className="material-symbols-outlined text-[var(--primary)]">notifications</span>

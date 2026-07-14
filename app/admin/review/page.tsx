@@ -184,7 +184,7 @@ export default function DetailedReview() {
                 <textarea rows={4} value={modalMsg} onChange={e => setModalMsg(e.target.value)} placeholder="e.g. Please upload a clearer photo of the transmission pan..." className="w-full p-4 rounded-xl border border-[var(--outline-variant)] focus:border-[var(--secondary)] outline-none text-sm resize-none mb-4" />
                 <div className="flex gap-3">
                   <button onClick={() => setShowModal(false)} className="flex-1 h-11 border border-[var(--outline-variant)] rounded-xl text-sm font-semibold text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-low)] transition-colors">Cancel</button>
-                  <button onClick={handleSendClarification} disabled={!modalMsg.trim()} className="flex-1 h-11 bg-[var(--primary)] text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40">Send Request</button>
+                  <button onClick={handleSendClarification} disabled={!modalMsg.trim()} className="flex-1 h-11 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-40">Send Request</button>
                 </div>
               </>
             )}

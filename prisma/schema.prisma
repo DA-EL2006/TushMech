@@ -15,6 +15,7 @@ enum Role {
 }
 
 enum JobStatus {
+  REQUESTED
   PENDING
   ASSIGNED
   EN_ROUTE
@@ -22,6 +23,7 @@ enum JobStatus {
   QUOTING
   APPROVED
   IN_PROGRESS
+  REPAIRING
   COMPLETED
   CANCELLED
 }
@@ -116,6 +118,9 @@ model User {
   vehicles      Vehicle[]
   requests      Job[]     @relation("CustomerJobs")
   assignments   Job[]     @relation("MechanicJobs")
+  
+  wallet        Wallet?
+  vendor_orders VendorOrder[] @relation("VendorOrders")
 }
 
 model Vehicle {
@@ -144,6 +149,7 @@ model Job {
   latitude         Float?
   longitude        Float?
   address          String?
+  quoted_price     Float?
   created_at       DateTime  @default(now())
   updated_at       DateTime  @updatedAt
 
@@ -153,6 +159,7 @@ model Job {
   
   diagnostic_report DiagnosticReport?
   invoice          Invoice?
+  vendor_orders    VendorOrder[]
 }
 
 model DiagnosticReport {
@@ -208,4 +215,31 @@ model Transaction {
   created_at DateTime          @default(now())
 
   invoice    Invoice           @relation(fields: [invoice_id], references: [id])
+}
+
+// Escrow & Financial Models
+model Wallet {
+  id               String   @id @default(uuid())
+  user_id          String   @unique
+  available_balance Float    @default(0)
+  escrow_balance    Float    @default(0)
+  updated_at       DateTime @updatedAt
+
+  user             User     @relation(fields: [user_id], references: [id])
+}
+
+model VendorOrder {
+  id             String   @id @default(uuid())
+  vendor_id      String
+  job_id         String
+  part_name      String
+  amount         Float
+  quantity       Int      @default(1)
+  status         String   @default("PENDING") // PENDING, SHIPPED, DELIVERED, DISPUTED
+  escrow_status  String   @default("HELD")    // HELD, RELEASED, FROZEN
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  vendor         User     @relation("VendorOrders", fields: [vendor_id], references: [id])
+  job            Job      @relation(fields: [job_id], references: [id])
 }

@@ -2,11 +2,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 export default function MechanicOnboarding() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
+    email: "",
+    password: "",
     phone: "",
     yearsOfExperience: "",
     specialization: "",
@@ -21,11 +25,50 @@ export default function MechanicOnboarding() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Persist mechanic profile data so /mechanic/dashboard can read it
-    localStorage.setItem("tushmech_mechanic_profile", JSON.stringify(formData));
-    router.push("/mechanic/dashboard");
+    setLoading(true);
+    try {
+      const regRes = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password,
+          role: "MECHANIC",
+        }),
+      });
+
+      if (!regRes.ok) {
+        const error = await regRes.json();
+        alert(`Registration failed: ${error.message}`);
+        setLoading(false);
+        return;
+      }
+
+      const signInRes = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (signInRes?.error) {
+        alert("Failed to sign in after registration.");
+        setLoading(false);
+        return;
+      }
+
+      // Fallback local storage
+      localStorage.setItem("tushmech_mechanic_profile", JSON.stringify(formData));
+      router.push("/mechanic/dashboard");
+    } catch (err) {
+      console.error(err);
+      alert("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -61,6 +104,14 @@ export default function MechanicOnboarding() {
                 <div>
                   <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Phone Number *</label>
                   <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="+234 800 000 0000" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Email Address *</label>
+                  <input type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="mechanic@example.com" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Password *</label>
+                  <input type="password" name="password" required value={formData.password} onChange={handleChange} placeholder="••••••••" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
                 </div>
               </div>
             </div>
@@ -131,10 +182,11 @@ export default function MechanicOnboarding() {
             </p>
             <button 
               type="submit" 
-              className="w-full md:w-auto px-12 h-14 bg-[var(--secondary)] text-white rounded-xl text-lg font-semibold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-[0.98]"
+              disabled={loading}
+              className="w-full md:w-auto px-12 h-14 bg-[var(--secondary)] text-[var(--on-secondary)] rounded-xl text-lg font-semibold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              <span className="material-symbols-outlined">check_circle</span>
-              Complete Profile & Go to Dispatch
+              {loading ? <span className="material-symbols-outlined animate-spin">progress_activity</span> : <span className="material-symbols-outlined">check_circle</span>}
+              {loading ? "Registering..." : "Complete Profile & Go to Dispatch"}
             </button>
           </div>
         </form>

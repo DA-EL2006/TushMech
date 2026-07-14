@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { useCartStore } from "../../../store/cartStore";
+import { useSession } from "next-auth/react";
 
 function CheckoutFinanceContent() {
   const router = useRouter();
@@ -14,10 +15,28 @@ function CheckoutFinanceContent() {
   const [loading, setLoading] = useState(true);
   const [payLoading, setPayLoading] = useState(false);
   const [error, setError] = useState("");
+  const [userProfile, setUserProfile] = useState<any>(null);
 
+  const { data: session } = useSession();
   const { cart, includeMechanicInstall, getCartTotal, clearCart } = useCartStore();
 
   const invoiceId = searchParams?.get("invoice_id");
+
+  useEffect(() => {
+    // Fetch real profile details
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch("/api/user/profile");
+        if (res.ok) {
+          const data = await res.json();
+          setUserProfile(data.user);
+        }
+      } catch (err) {}
+    };
+    if (session) {
+      fetchProfile();
+    }
+  }, [session]);
 
   useEffect(() => {
     if (!invoiceId) {
@@ -51,9 +70,9 @@ function CheckoutFinanceContent() {
     currency: 'NGN',
     payment_options: 'card,mobilemoney,ussd',
     customer: {
-      email: 'demo@tushmech.ng',
-      phone_number: '08102909304',
-      name: 'TushMech Customer',
+      email: userProfile?.email || session?.user?.email || 'demo@tushmech.ng',
+      phone_number: userProfile?.phone || '08102909304',
+      name: userProfile?.name || session?.user?.name || 'TushMech Customer',
     },
     customizations: {
       title: 'TushMech Payment',

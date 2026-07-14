@@ -5,7 +5,14 @@ import prisma from "@/app/lib/prisma";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, firstName, lastName, phone } = body;
+    let { email, password, firstName, lastName, fullName, phone, role } = body;
+
+    // Handle fullName from onboarding forms
+    if (fullName && !firstName) {
+      const parts = fullName.trim().split(" ");
+      firstName = parts[0];
+      lastName = parts.length > 1 ? parts.slice(1).join(" ") : " ";
+    }
 
     if (!email || !password || !firstName || !lastName) {
       return NextResponse.json(
@@ -47,7 +54,7 @@ export async function POST(request: Request) {
         first_name: firstName,
         last_name: lastName,
         phone: phone || undefined,
-        // Role defaults to CUSTOMER based on Prisma schema
+        role: role || "CUSTOMER",
       },
     });
 

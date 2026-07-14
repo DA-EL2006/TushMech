@@ -173,7 +173,7 @@ export default function HubDropOff() {
             <div className="flex gap-3">
               <button onClick={() => setStep(2)} className="h-14 px-6 rounded-xl border border-[var(--outline-variant)] font-semibold text-sm text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-low)] transition-colors">← Back</button>
               <button onClick={() => setStep("done")}
-                className="flex-1 h-14 rounded-xl bg-[var(--secondary)] text-white font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                className="flex-1 h-14 rounded-xl bg-[var(--secondary)] text-[var(--on-secondary)] font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
                 <span className="material-symbols-outlined">event_available</span>Confirm Booking
               </button>
             </div>
@@ -196,7 +196,7 @@ export default function HubDropOff() {
               <p className="text-xs text-[var(--on-surface-variant)] mt-2">{hub?.name}</p>
               <p className="text-xs font-semibold text-[var(--primary)]">{TOMORROW()} · {slot}</p>
             </div>
-            <Link href="/customer/dashboard" className="w-full max-w-xs h-14 bg-[var(--primary)] text-white rounded-xl font-bold flex items-center justify-center hover:opacity-90 transition-opacity">
+            <Link href="/customer/dashboard" className="w-full max-w-xs h-14 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl font-bold flex items-center justify-center hover:opacity-90 transition-opacity">
               Back to Dashboard
             </Link>
           </div>

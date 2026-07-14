@@ -23,7 +23,7 @@ export default function VendorInventory() {
               <h2 className="text-3xl font-semibold text-[var(--on-surface)] tracking-tight">Vendor Inventory</h2>
               <p className="text-sm text-[var(--on-surface-variant)] mt-1">Manage and track spare parts across all active vendors.</p>
             </div>
-            <button className="flex items-center gap-2 px-4 h-10 bg-[var(--secondary)] text-white rounded-md text-sm font-semibold shadow-sm hover:bg-[var(--secondary)]/90 transition-colors">
+            <button className="flex items-center gap-2 px-4 h-10 bg-[var(--secondary)] text-[var(--on-secondary)] rounded-md text-sm font-semibold shadow-sm hover:bg-[var(--secondary)]/90 transition-colors">
               <span className="material-symbols-outlined text-[18px]">upload_file</span> Upload CSV
             </button>
           </div>

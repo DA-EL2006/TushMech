@@ -57,7 +57,7 @@ export default function FleetBilling() {
                 </div>
 
                 <div className="flex gap-4 pt-6 border-t border-[var(--outline-variant)]">
-                  <button className="px-6 py-2.5 bg-[var(--primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+                  <button className="px-6 py-2.5 bg-[var(--primary)] text-[var(--on-primary)] rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
                     Manage Subscription
                   </button>
                   <button className="px-6 py-2.5 bg-[var(--surface-container-low)] text-[var(--primary)] border border-[var(--outline-variant)] rounded-lg text-sm font-semibold hover:bg-[var(--surface-variant)] transition-colors">

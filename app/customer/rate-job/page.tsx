@@ -95,7 +95,7 @@ export default function RateJob() {
 
         {/* Submit */}
         <button onClick={handleSubmit} disabled={stars === 0}
-          className="w-full h-14 bg-[var(--primary)] text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity shadow-level-2">
+          className="w-full h-14 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity shadow-level-2">
           <span className="material-symbols-outlined">send</span>Submit Rating
         </button>
 

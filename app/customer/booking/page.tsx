@@ -5,6 +5,8 @@ import TopAppBar from "../../components/TopAppBar";
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { pusherClient } from "@/app/lib/pusherClient";
+import { useEffect } from "react";
 
 // Dynamically import Leaflet map (client-side only)
 const MapComponent = dynamic(() => import("../../components/Map"), {
@@ -19,6 +21,9 @@ export default function BookingMap() {
   const [trackingPhase, setTrackingPhase] = useState<"idle"|"finding"|"assigned"|"enroute"|"arriving"|"done"|"scheduling"|"bay_assigned"|"dropoff_confirmed">("idle");
   const [eta, setEta] = useState(12);
   const [deliveryMethod, setDeliveryMethod] = useState<"mobile"|"hub">("mobile");
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [assignedMechanic, setAssignedMechanic] = useState<string>("TushMech Technician");
+  const { data: session } = useSession();
 
   const services = [
     { icon: "health_and_safety", title: "Diagnostics", desc: "Check engine light or weird noises." },
@@ -42,12 +47,19 @@ export default function BookingMap() {
   const mapZoom = deliveryMethod === "mobile" ? 14 : 16;
   const mapMarkers = deliveryMethod === "mobile" ? mechanicMarkers : [{ lat: hubLocation[0], lng: hubLocation[1], isMechanic: true, title: "TushMech Hub Abuja" }];
 
-  const handleRequest = async () => {
-    setLoading(true);
-    if (deliveryMethod === "mobile") {
-      setTrackingPhase("finding");
-      setTimeout(() => {
+  useEffect(() => {
+    if (!session?.user || deliveryMethod === "hub") return;
+    const userId = (session.user as any).id;
+    
+    const channel = pusherClient?.subscribe(`customer-${userId}`);
+    
+    channel?.bind("job_updated", (data: any) => {
+      if (jobId && data.job.id !== jobId) return; 
+      
+      if (data.job.status === "ASSIGNED") {
+        setAssignedMechanic(data.job.mechanic);
         setTrackingPhase("assigned");
+        
         setTimeout(() => {
           setTrackingPhase("enroute");
           let e = 12;
@@ -59,9 +71,43 @@ export default function BookingMap() {
               clearInterval(interval);
               setTrackingPhase("done");
             }
-          }, 800);
+          }, 800); // Fast forward for demo
         }, 2000);
-      }, 2500);
+      }
+    });
+
+    return () => {
+      pusherClient?.unsubscribe(`customer-${userId}`);
+    };
+  }, [session, jobId, deliveryMethod]);
+
+  const handleRequest = async () => {
+    setLoading(true);
+    if (deliveryMethod === "mobile") {
+      setTrackingPhase("finding");
+      try {
+        const res = await fetch("/api/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            reported_issue: services[selected].title + " - " + services[selected].desc,
+            latitude: userLocation[0],
+            longitude: userLocation[1],
+            address: "Lagos, Nigeria",
+            fetch_first_vehicle: true
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setJobId(data.job.id);
+        } else {
+          setTrackingPhase("idle");
+          alert("Failed to create job. Make sure you have a registered vehicle.");
+        }
+      } catch (err) {
+        setTrackingPhase("idle");
+        console.error(err);
+      }
     } else {
       setTrackingPhase("scheduling");
       setTimeout(() => {
@@ -102,7 +148,7 @@ export default function BookingMap() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[var(--primary)] mb-2">{currentPhase?.label}</h2>
-            {trackingPhase === "enroute" && <p className="text-[var(--on-surface-variant)] text-sm">David O. — TushMech Technician</p>}
+            {trackingPhase === "enroute" && <p className="text-[var(--on-surface-variant)] text-sm">{assignedMechanic}</p>}
             {trackingPhase === "dropoff_confirmed" && <p className="text-[var(--on-surface-variant)] text-sm">Tomorrow, 10:00 AM @ Abuja Hub</p>}
           </div>
           {/* Progress steps */}
@@ -127,7 +173,7 @@ export default function BookingMap() {
                 {trackingPhase === "done" ? "Your vehicle has been serviced. Rate your experience!" : "Your drop-off slot is reserved. We'll send a reminder SMS."}
               </p>
               {trackingPhase === "done" && (
-                <a href="/customer/rate-job" className="block w-full h-14 bg-[var(--primary)] text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                <a href="/customer/rate-job" className="block w-full h-14 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
                   <span className="material-symbols-outlined">star</span>Rate This Job
                 </a>
               )}
@@ -211,7 +257,7 @@ export default function BookingMap() {
           <button 
             onClick={handleRequest}
             disabled={loading}
-            className="w-full h-14 bg-[var(--primary)] text-white text-sm font-semibold rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 border border-[var(--primary)] flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-70 disabled:hover:translate-y-0"
+            className="w-full h-14 bg-[var(--primary)] text-[var(--on-primary)] text-sm font-semibold rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 border border-[var(--primary)] flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-70 disabled:hover:translate-y-0"
           >
             {loading ? <span className="material-symbols-outlined animate-spin text-[20px]">progress_activity</span> : (
               <>

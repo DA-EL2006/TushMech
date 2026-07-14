@@ -25,7 +25,7 @@ export default function AdminMechanics() {
             <h1 className="text-2xl font-bold text-[var(--primary)] tracking-tight">Mechanic Fleet Management</h1>
             <p className="text-sm text-[var(--on-surface-variant)] mt-1">Manage and monitor verified TushMech technicians.</p>
           </div>
-          <button className="h-10 px-4 bg-[var(--secondary)] text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm">
+          <button className="h-10 px-4 bg-[var(--secondary)] text-[var(--on-secondary)] text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm">
             <span className="material-symbols-outlined text-[18px]">person_add</span> Onboard New Mechanic
           </button>
         </header>

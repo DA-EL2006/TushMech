@@ -284,7 +284,7 @@ export default function VendorOnboarding() {
             </p>
             <button
               type="submit"
-              className="w-full md:w-auto px-12 h-14 bg-[var(--secondary)] text-white rounded-xl text-lg font-semibold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-[0.98]"
+              className="w-full md:w-auto px-12 h-14 bg-[var(--secondary)] text-[var(--on-secondary)] rounded-xl text-lg font-semibold shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-[0.98]"
             >
               <span className="material-symbols-outlined">local_shipping</span>
               Launch Vendor Dashboard

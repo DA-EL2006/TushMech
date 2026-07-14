@@ -219,12 +219,7 @@
   --color-warning-orange: var(--warning-orange);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+
 
 /* === Base Styles === */
 body {

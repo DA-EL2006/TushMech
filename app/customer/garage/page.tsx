@@ -143,7 +143,7 @@ export default function CustomerGarage() {
               </p>
             </div>
             <Link href="/customer/booking"
-              className="flex-shrink-0 bg-[var(--secondary)] text-white text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1 hover:opacity-90 transition-opacity mt-1">
+              className="flex-shrink-0 bg-[var(--secondary)] text-[var(--on-secondary)] text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1 hover:opacity-90 transition-opacity mt-1">
               <span className="material-symbols-outlined text-[16px]">build</span>Book Service
             </Link>
           </div>

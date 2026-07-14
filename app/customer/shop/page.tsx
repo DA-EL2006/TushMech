@@ -65,7 +65,7 @@ export default function SparePartsShop() {
         <h1 className="text-xl font-bold text-[var(--primary)] tracking-tight">Spare Parts</h1>
         <button onClick={() => setCartOpen(true)} className="relative w-11 h-11 flex items-center justify-center hover:bg-[var(--surface-container-low)] rounded-full transition-colors">
           <span className="material-symbols-outlined text-[var(--primary)]">shopping_cart</span>
-          {mounted && cartCount > 0 && <span className="absolute top-1.5 right-1.5 bg-[var(--secondary)] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">{cartCount}</span>}
+          {mounted && cartCount > 0 && <span className="absolute top-1.5 right-1.5 bg-[var(--secondary)] text-[var(--on-secondary)] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">{cartCount}</span>}
         </button>
       </header>
 
@@ -133,7 +133,7 @@ export default function SparePartsShop() {
                     toggleMechanicInstall(false);
                     setCartOpen(true);
                   }}
-                  className="w-full h-9 border border-[var(--primary)] text-[var(--primary)] text-xs font-semibold rounded-lg hover:bg-[var(--primary)] hover:text-white transition-colors flex items-center justify-center gap-1.5 mb-1.5">
+                  className="w-full h-9 border border-[var(--primary)] text-[var(--primary)] text-xs font-semibold rounded-lg hover:bg-[var(--primary)] hover:text-[var(--on-primary)] transition-colors flex items-center justify-center gap-1.5 mb-1.5">
                   <span className="material-symbols-outlined text-[16px]">add_shopping_cart</span>Add to Cart
                 </button>
                 <button 
@@ -143,7 +143,7 @@ export default function SparePartsShop() {
                     toggleMechanicInstall(true);
                     setCartOpen(true);
                   }}
-                  className="w-full h-9 bg-[var(--secondary)]/10 border border-[var(--secondary)]/30 text-[var(--secondary)] text-xs font-semibold rounded-lg hover:bg-[var(--secondary)] hover:text-white transition-colors flex items-center justify-center gap-1.5">
+                  className="w-full h-9 bg-[var(--secondary)]/10 border border-[var(--secondary)]/30 text-[var(--secondary)] text-xs font-semibold rounded-lg hover:bg-[var(--secondary)] hover:text-[var(--on-secondary)] transition-colors flex items-center justify-center gap-1.5">
                   <span className="material-symbols-outlined text-[16px]">build</span>Buy + Book Install
                 </button>
               </div>
@@ -161,9 +161,9 @@ export default function SparePartsShop() {
 
       {/* Cart Drawer */}
       {cartOpen && (
-        <div className="fixed inset-0 z-50 flex items-end">
+        <div className="fixed inset-0 z-[60] flex items-end">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setCartOpen(false)} />
-          <div className="relative w-full bg-white rounded-t-3xl shadow-2xl p-6 max-h-[80vh] flex flex-col">
+          <div className="relative w-full bg-[var(--surface-container-lowest)] rounded-t-3xl shadow-2xl p-6 pb-safe max-h-[80vh] flex flex-col">
             <div className="flex justify-between items-center mb-5">
               <h3 className="text-xl font-bold text-[var(--primary)]">Cart ({cartCount} items)</h3>
               <button onClick={() => setCartOpen(false)} className="w-9 h-9 rounded-full bg-[var(--surface-container-low)] flex items-center justify-center">
@@ -192,7 +192,7 @@ export default function SparePartsShop() {
                     </button>
                     <span className="text-sm font-bold w-5 text-center">{item.qty}</span>
                     <button onClick={() => updateQuantity(item.id, item.qty + 1)}
-                      className="w-7 h-7 rounded-full bg-[var(--secondary)] flex items-center justify-center text-white hover:opacity-90">
+                      className="w-7 h-7 rounded-full bg-[var(--secondary)] flex items-center justify-center text-[var(--on-secondary)] hover:opacity-90">
                       <span className="material-symbols-outlined text-[16px]">add</span>
                     </button>
                   </div>
@@ -214,7 +214,7 @@ export default function SparePartsShop() {
                   </div>
                 </div>
 
-                <div className="flex justify-between items-end">
+                <div className="flex justify-between items-end pb-2">
                   <div>
                     <span className="font-semibold text-[var(--on-surface-variant)] block text-sm">Total</span>
                     {includeMechanicInstall && <span className="text-[10px] text-[var(--outline)]">Includes ₦15,000 install fee</span>}
@@ -222,7 +222,7 @@ export default function SparePartsShop() {
                   <span className="text-2xl font-bold text-[var(--primary)]">₦ {grandTotal.toLocaleString()}</span>
                 </div>
                 <Link href="/customer/checkout" onClick={() => setCartOpen(false)}
-                  className="w-full h-14 bg-[var(--primary)] text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-level-2">
+                  className="w-full h-14 bg-[var(--primary)] text-[var(--on-primary)] rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-level-2 mb-2">
                   <span className="material-symbols-outlined">shopping_bag</span>Proceed to Checkout
                 </Link>
               </div>
