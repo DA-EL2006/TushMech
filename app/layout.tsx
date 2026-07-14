@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./components/Providers";
 import { ThemeProvider } from "./components/ThemeProvider";
+import ThemeToggle from "./components/ThemeToggle";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,9 +30,10 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-[Inter,sans-serif]">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
           <Providers>
             {children}
+            <ThemeToggle className="fixed bottom-6 left-6 z-[9999] bg-[var(--surface-container-highest)] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-[var(--outline-variant)]/30 backdrop-blur-md" />
           </Providers>
         </ThemeProvider>
       </body>

@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+interface AdminProfile { fullName: string; roleLevel: string; [key: string]: string; }
 
 interface AdminSideNavProps {
   activeItem?: string;
@@ -10,13 +13,25 @@ interface AdminSideNavProps {
 const navItems = [
   { icon: "dashboard", label: "Dashboard", href: "/admin/control-room" },
   { icon: "my_location", label: "Live Control", href: "/admin/control-room" },
-  { icon: "build", label: "Mechanics", href: "#" },
+  { icon: "build", label: "Mechanics", href: "/admin/mechanics" },
   { icon: "assignment", label: "QA Queue", href: "/admin/qa-queue" },
   { icon: "bar_chart", label: "Analytics", href: "/admin/analytics" },
-  { icon: "settings", label: "Settings", href: "#" },
+  { icon: "settings", label: "Settings", href: "/admin/settings" },
 ];
 
 export default function AdminSideNav({ activeItem = "Live Control" }: AdminSideNavProps) {
+  const [profile, setProfile] = useState<AdminProfile | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("tushmech_admin_profile");
+      if (raw) setProfile(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  const adminName = profile?.fullName || "Admin User";
+  const adminRole = profile?.roleLevel || "System Operator";
+
   return (
     <aside className="hidden md:flex flex-col w-64 bg-[var(--surface-container-lowest)] border-r border-[var(--outline-variant)] shadow-[4px_0_8px_rgba(0,0,0,0.02)] z-40 fixed h-full left-0 top-0">
       <div className="h-16 flex items-center px-6 border-b border-[var(--outline-variant)] gap-3">
@@ -63,8 +78,8 @@ export default function AdminSideNav({ activeItem = "Live Control" }: AdminSideN
             height={32}
           />
           <div>
-            <div className="text-xs font-semibold text-[var(--on-surface)]">Admin User</div>
-            <div className="text-xs text-[var(--on-surface-variant)]">System Operator</div>
+            <div className="text-xs font-semibold text-[var(--on-surface)]">{adminName}</div>
+            <div className="text-xs text-[var(--on-surface-variant)]">{adminRole}</div>
           </div>
         </div>
       </div>

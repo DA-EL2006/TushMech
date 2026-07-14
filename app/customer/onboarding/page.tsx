@@ -49,7 +49,8 @@ export default function CustomerOnboarding() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate saving car details
+    // Persist garage data so /customer/garage and /customer/shop can read it
+    localStorage.setItem("tushmech_garage", JSON.stringify(cars));
     router.push("/customer/dashboard");
   };
 

@@ -1,65 +1,42 @@
-import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default withAuth(
-  function middleware(req) {
-    const token = req.nextauth.token;
-    const path = req.nextUrl.pathname;
+// ─────────────────────────────────────────────────────────────────────────────
+// DEMO AUTH — no NextAuth required.
+// Role is stored in the "tushmech_role" cookie when the user clicks a role on
+// the /login or homepage. Clicking a role IS the authentication for this demo.
+// ─────────────────────────────────────────────────────────────────────────────
 
-    // Onboarding pages are public — allow unauthenticated access
-    if (path.endsWith("/onboarding")) {
-      return NextResponse.next();
-    }
+const ROLE_COOKIE = "tushmech_role";
 
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+function notFound(req: NextRequest) {
+  return NextResponse.rewrite(new URL("/not-found", req.url));
+}
 
-    const role = token.role as string;
+export default function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
 
-    // Helper to get the correct dashboard URL for a role
-    const getDashboardUrl = (userRole: string) => {
-      switch (userRole) {
-        case "ADMIN": return new URL("/admin/control-room", req.url);
-        case "MECHANIC": return new URL("/mechanic/dispatch", req.url);
-        case "VENDOR": return new URL("/vendor/inventory", req.url);
-        case "CUSTOMER":
-        default: return new URL("/customer/dashboard", req.url);
-      }
-    };
+  // Always allow onboarding entry pages — they are the login for each role
+  if (pathname.endsWith("/onboarding")) return NextResponse.next();
 
-    // Role-based route protection: bounce unauthorized users to their correct dashboard
-    if (path.startsWith("/customer") && role !== "CUSTOMER" && role !== "ADMIN") {
-      return NextResponse.redirect(getDashboardUrl(role));
-    }
-    if (path.startsWith("/mechanic") && role !== "MECHANIC" && role !== "ADMIN") {
-      return NextResponse.redirect(getDashboardUrl(role));
-    }
-    if (path.startsWith("/admin") && role !== "ADMIN") {
-      return NextResponse.redirect(getDashboardUrl(role));
-    }
-    if (path.startsWith("/vendor") && role !== "VENDOR" && role !== "ADMIN") {
-      return NextResponse.redirect(getDashboardUrl(role));
-    }
+  const role = req.cookies.get(ROLE_COOKIE)?.value?.toUpperCase();
 
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      // Allow the middleware function itself to decide — return true to let it run
-      authorized: ({ token, req }) => {
-        const path = req.nextUrl.pathname;
-        // Onboarding is always allowed through
-        if (path.endsWith("/onboarding")) return true;
-        return !!token;
-      },
-    },
+  // No cookie = user hasn't selected a role yet → go to login
+  if (!role) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
-);
+
+  // Role-based 404 — wrong role trying to access another role's section
+  if (pathname.startsWith("/customer") && role !== "CUSTOMER") return notFound(req);
+  if (pathname.startsWith("/mechanic") && role !== "MECHANIC") return notFound(req);
+  if (pathname.startsWith("/admin")    && role !== "ADMIN")    return notFound(req);
+  if (pathname.startsWith("/vendor")   && role !== "VENDOR")   return notFound(req);
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
-    // Protect all role-based routes EXCEPT the /onboarding entry pages
+    // Protect all role-specific routes, but skip their /onboarding entry pages
     "/customer/((?!onboarding).*)",
     "/mechanic/((?!onboarding).*)",
     "/admin/((?!onboarding).*)",

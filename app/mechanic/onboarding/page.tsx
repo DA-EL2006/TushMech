@@ -23,8 +23,9 @@ export default function MechanicOnboarding() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate saving profile details
-    router.push("/mechanic/dispatch");
+    // Persist mechanic profile data so /mechanic/dashboard can read it
+    localStorage.setItem("tushmech_mechanic_profile", JSON.stringify(formData));
+    router.push("/mechanic/dashboard");
   };
 
   return (

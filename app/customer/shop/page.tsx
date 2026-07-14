@@ -1,13 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TopAppBar from "../../components/TopAppBar";
 import BottomNavBar from "../../components/BottomNavBar";
+import { useCartStore } from "../../../store/cartStore";
 
-interface CartItem { id: string; name: string; price: number; img: string; qty: number; }
+interface GarageVehicle { make: string; model: string; year: string; [key: string]: string; }
 
-const userCars = ["All Parts", "2016 Camry", "2019 Corolla"];
 
 const parts = [
   { id: "p1", img: "/images/obd2_scanner.jpg", name: "Denso Oxygen Sensor — Front", price: 18500, type: "OEM", compat: ["2016 Camry", "2019 Corolla"], category: "Sensors", rating: "4.8", reviews: "92" },
@@ -23,12 +23,28 @@ const parts = [
 const categories = ["All", "Brakes", "Engine", "Filters", "Sensors", "Fluids"];
 
 export default function SparePartsShop() {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const { cart, addToCart, updateQuantity, removeFromCart, getCartTotal, getCartCount, includeMechanicInstall, toggleMechanicInstall, clearCart } = useCartStore();
   const [cartOpen, setCartOpen] = useState(false);
   const [carFilter, setCarFilter] = useState("All Parts");
   const [typeFilter, setTypeFilter] = useState<"All" | "OEM" | "Aftermarket">("All");
   const [catFilter, setCatFilter] = useState("All");
   const [bookPart, setBookPart] = useState<string | null>(null);
+  const [userCars, setUserCars] = useState<string[]>(["All Parts", "2016 Camry", "2019 Corolla"]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const raw = localStorage.getItem("tushmech_garage");
+      if (raw) {
+        const parsed: GarageVehicle[] = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const labels = parsed.map((v: GarageVehicle) => `${v.year} ${v.make} ${v.model}`.trim()).filter(Boolean);
+          if (labels.length > 0) { setUserCars(["All Parts", ...labels]); return; }
+        }
+      }
+    } catch {}
+  }, []);
 
   const filtered = parts.filter(p => {
     const carMatch = carFilter === "All Parts" || p.compat.includes(carFilter);
@@ -37,16 +53,10 @@ export default function SparePartsShop() {
     return carMatch && typeMatch && catMatch;
   });
 
-  const addToCart = (part: typeof parts[0]) => {
-    setCart(prev => {
-      const ex = prev.find(i => i.id === part.id);
-      if (ex) return prev.map(i => i.id === part.id ? { ...i, qty: i.qty + 1 } : i);
-      return [...prev, { id: part.id, name: part.name, price: part.price, img: part.img, qty: 1 }];
-    });
-  };
-
-  const cartTotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const cartCount = cart.reduce((s, i) => s + i.qty, 0);
+  const cartTotal = getCartTotal();
+  const cartCount = getCartCount();
+  const mechanicFee = 15000;
+  const grandTotal = cartTotal + (includeMechanicInstall ? mechanicFee : 0);
 
   return (
     <div className="min-h-screen bg-[var(--background)] antialiased pb-24">
@@ -55,7 +65,7 @@ export default function SparePartsShop() {
         <h1 className="text-xl font-bold text-[var(--primary)] tracking-tight">Spare Parts</h1>
         <button onClick={() => setCartOpen(true)} className="relative w-11 h-11 flex items-center justify-center hover:bg-[var(--surface-container-low)] rounded-full transition-colors">
           <span className="material-symbols-outlined text-[var(--primary)]">shopping_cart</span>
-          {cartCount > 0 && <span className="absolute top-1.5 right-1.5 bg-[var(--secondary)] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">{cartCount}</span>}
+          {mounted && cartCount > 0 && <span className="absolute top-1.5 right-1.5 bg-[var(--secondary)] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">{cartCount}</span>}
         </button>
       </header>
 
@@ -116,15 +126,26 @@ export default function SparePartsShop() {
                 </div>
                 <h4 className="text-xs font-semibold text-[var(--primary)] mb-2 line-clamp-2 flex-grow">{p.name}</h4>
                 <p className="text-sm font-bold text-[var(--primary)] mb-3">₦ {p.price.toLocaleString()}</p>
-                <button onClick={() => addToCart(p)}
+                <button 
+                  onClick={() => {
+                    clearCart();
+                    addToCart(p);
+                    toggleMechanicInstall(false);
+                    setCartOpen(true);
+                  }}
                   className="w-full h-9 border border-[var(--primary)] text-[var(--primary)] text-xs font-semibold rounded-lg hover:bg-[var(--primary)] hover:text-white transition-colors flex items-center justify-center gap-1.5 mb-1.5">
                   <span className="material-symbols-outlined text-[16px]">add_shopping_cart</span>Add to Cart
                 </button>
-                <Link href="/customer/booking"
-                  onClick={() => setBookPart(p.name)}
+                <button 
+                  onClick={() => {
+                    clearCart();
+                    addToCart(p);
+                    toggleMechanicInstall(true);
+                    setCartOpen(true);
+                  }}
                   className="w-full h-9 bg-[var(--secondary)]/10 border border-[var(--secondary)]/30 text-[var(--secondary)] text-xs font-semibold rounded-lg hover:bg-[var(--secondary)] hover:text-white transition-colors flex items-center justify-center gap-1.5">
                   <span className="material-symbols-outlined text-[16px]">build</span>Buy + Book Install
-                </Link>
+                </button>
               </div>
             </article>
           ))}
@@ -162,12 +183,15 @@ export default function SparePartsShop() {
                     <p className="text-sm font-bold text-[var(--secondary)] mt-0.5">₦ {(item.price * item.qty).toLocaleString()}</p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <button onClick={() => setCart(c => c.map(i => i.id===item.id ? {...i, qty: Math.max(1,i.qty-1)} : i))}
+                    <button onClick={() => {
+                        if (item.qty <= 1) removeFromCart(item.id);
+                        else updateQuantity(item.id, item.qty - 1);
+                      }}
                       className="w-7 h-7 rounded-full bg-[var(--surface-container-low)] flex items-center justify-center text-[var(--on-surface-variant)] hover:bg-[var(--outline-variant)]">
                       <span className="material-symbols-outlined text-[16px]">remove</span>
                     </button>
                     <span className="text-sm font-bold w-5 text-center">{item.qty}</span>
-                    <button onClick={() => addToCart(parts.find(p => p.id===item.id)!)}
+                    <button onClick={() => updateQuantity(item.id, item.qty + 1)}
                       className="w-7 h-7 rounded-full bg-[var(--secondary)] flex items-center justify-center text-white hover:opacity-90">
                       <span className="material-symbols-outlined text-[16px]">add</span>
                     </button>
@@ -176,13 +200,29 @@ export default function SparePartsShop() {
               ))}
             </div>
             {cart.length > 0 && (
-              <div className="border-t border-[var(--outline-variant)] pt-4">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="font-semibold text-[var(--on-surface-variant)]">Total</span>
-                  <span className="text-2xl font-bold text-[var(--primary)]">₦ {cartTotal.toLocaleString()}</span>
+              <div className="border-t border-[var(--outline-variant)] pt-4 space-y-4">
+                <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-100 rounded-xl">
+                  <div>
+                    <h4 className="text-sm font-bold text-blue-900 flex items-center gap-1.5"><span className="material-symbols-outlined text-[16px]">build</span> Mobile Mechanic Install</h4>
+                    <p className="text-xs text-blue-700 mt-0.5">Let an expert install this for you (₦15,000 flat fee)</p>
+                  </div>
+                  <div 
+                    onClick={() => toggleMechanicInstall(!includeMechanicInstall)}
+                    className={`w-12 h-6 rounded-full relative cursor-pointer shadow-inner transition-colors ${includeMechanicInstall ? "bg-[var(--secondary)]" : "bg-white border border-[var(--outline-variant)]"}`}
+                  >
+                    <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm transition-all duration-300 ${includeMechanicInstall ? "right-0.5" : "left-0.5 border border-[var(--outline-variant)]"}`} />
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-end">
+                  <div>
+                    <span className="font-semibold text-[var(--on-surface-variant)] block text-sm">Total</span>
+                    {includeMechanicInstall && <span className="text-[10px] text-[var(--outline)]">Includes ₦15,000 install fee</span>}
+                  </div>
+                  <span className="text-2xl font-bold text-[var(--primary)]">₦ {grandTotal.toLocaleString()}</span>
                 </div>
                 <Link href="/customer/checkout" onClick={() => setCartOpen(false)}
-                  className="w-full h-14 bg-[var(--primary)] text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                  className="w-full h-14 bg-[var(--primary)] text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-level-2">
                   <span className="material-symbols-outlined">shopping_bag</span>Proceed to Checkout
                 </Link>
               </div>

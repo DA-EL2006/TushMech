@@ -21,7 +21,8 @@ export default function AdminOnboarding() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate saving profile details
+    // Persist admin profile data so /admin/control-room and sidebar can read it
+    localStorage.setItem("tushmech_admin_profile", JSON.stringify(formData));
     router.push("/admin/control-room");
   };
 

@@ -416,3 +416,30 @@ input:focus, select:focus, textarea:focus {
   border-color: #316bf3;
   outline: none;
 }
+
+/* === Smart Dark Mode Utility Overrides === */
+/* Automatically fixes hardcoded light-mode tailwind classes when .dark is active */
+.dark .bg-white { 
+  background-color: var(--surface-container-lowest) !important; 
+}
+.dark .text-gray-900, .dark .text-gray-800, .dark .text-black { 
+  color: var(--primary) !important; 
+}
+.dark .text-gray-700, .dark .text-gray-600, .dark .text-gray-500 { 
+  color: var(--on-surface-variant) !important; 
+}
+.dark .bg-gray-50, .dark .bg-gray-100 { 
+  background-color: var(--surface-container-low) !important; 
+}
+.dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300 { 
+  border-color: var(--outline-variant) !important; 
+}
+.dark .bg-blue-50 { background-color: rgba(37, 99, 235, 0.1) !important; border-color: rgba(37, 99, 235, 0.2) !important; }
+.dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.1) !important; border-color: rgba(245, 158, 11, 0.2) !important; }
+.dark .bg-green-50 { background-color: rgba(16, 185, 129, 0.1) !important; border-color: rgba(16, 185, 129, 0.2) !important; }
+.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.1) !important; border-color: rgba(239, 68, 68, 0.2) !important; }
+.dark .text-blue-900, .dark .text-blue-800 { color: #93c5fd !important; } /* blue-300 */
+.dark .text-amber-900, .dark .text-amber-800 { color: #fcd34d !important; } /* amber-300 */
+.dark .text-green-900, .dark .text-green-800 { color: #6ee7b7 !important; } /* green-300 */
+.dark .text-red-900, .dark .text-red-800 { color: #fca5a5 !important; } /* red-300 */
+

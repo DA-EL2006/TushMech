@@ -1,15 +1,52 @@
 "use client";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import TopAppBar from "../../components/TopAppBar";
 import BottomNavBar from "../../components/BottomNavBar";
 
+interface GarageVehicle { make: string; model: string; year: string; mileage: string; licensePlate: string; knownIssues: string; [key: string]: string; }
+
 export default function CustomerDashboard() {
+  const [primaryCar, setPrimaryCar] = useState<GarageVehicle | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("tushmech_garage");
+      if (raw) {
+        const parsed: GarageVehicle[] = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) setPrimaryCar(parsed[0]);
+      }
+    } catch {}
+  }, []);
+
+  const carName = primaryCar ? `${primaryCar.year} ${primaryCar.make} ${primaryCar.model}`.trim() : "2016 Toyota Camry";
+  const carPlate = primaryCar?.licensePlate || "ABC-1234";
+  const carMileage = primaryCar?.mileage ? `${parseInt(primaryCar.mileage).toLocaleString()} km` : "64,250 km";
+  const hasIssues = !!primaryCar?.knownIssues;
+
   return (
     <div className="min-h-screen bg-[var(--background)] pb-20 pt-16">
       <TopAppBar />
       <main className="flex-grow flex flex-col gap-8 p-6 pt-8 md:pt-12 max-w-7xl mx-auto w-full">
-        {/* Digital Garage Widget */}
+        
+        {/* Pending Action Banner */}
+        <section>
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 md:p-6 shadow-sm flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 text-blue-600">
+                <span className="material-symbols-outlined text-[24px]">fact_check</span>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-blue-900 mb-1">Diagnostic Report Ready</h3>
+                <p className="text-sm text-blue-800">Your mechanic has completed the inspection for your 2022 Tesla Model 3. Review the findings to approve repairs.</p>
+              </div>
+            </div>
+            <Link href="/customer/report" className="w-full md:w-auto flex-shrink-0 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors text-center whitespace-nowrap shadow-sm">
+              View Report
+            </Link>
+          </div>
+        </section>
+
         <section className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-semibold text-[var(--primary)]">Your Digital Garage</h2>
@@ -19,18 +56,25 @@ export default function CustomerDashboard() {
           </div>
           <Link href="/customer/garage" className="bg-[var(--surface-container-lowest)] rounded-xl border border-[var(--outline-variant)] shadow-level-1 p-6 flex flex-col md:flex-row gap-6 items-center relative overflow-hidden hover:border-[var(--secondary)] transition-colors">
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--surface-bright)] to-transparent opacity-50 z-0 pointer-events-none" />
-            <div className="relative z-10 w-full md:w-1/3 aspect-[4/3] rounded-lg overflow-hidden border border-[var(--outline-variant)]">
-              <Image className="w-full h-full object-cover" src="/images/car_camry.jpg" alt="2016 Toyota Camry" fill sizes="(max-width: 768px) 100vw, 33vw" />
+            {/* Vehicle icon placeholder — image removed for dynamic mode */}
+            <div className="relative z-10 w-full md:w-1/3 aspect-[4/3] rounded-lg overflow-hidden border border-[var(--outline-variant)] bg-gradient-to-br from-[var(--primary-container)] to-[var(--deep-navy)] flex items-center justify-center">
+              <span className="material-symbols-outlined text-white/60 text-[80px]" style={{ fontVariationSettings: "'FILL' 1" }}>directions_car</span>
             </div>
             <div className="relative z-10 flex-grow flex flex-col gap-2 w-full">
               <div className="flex justify-between items-start flex-wrap gap-2">
                 <div>
-                  <h3 className="text-xl font-bold text-[var(--primary)]">2016 Toyota Camry</h3>
-                  <p className="text-base text-[var(--on-surface-variant)] uppercase tracking-wider">ABC-1234</p>
+                  <h3 className="text-xl font-bold text-[var(--primary)]">{carName}</h3>
+                  <p className="text-base text-[var(--on-surface-variant)] uppercase tracking-wider">{carPlate}</p>
                 </div>
-                <div className="bg-[var(--on-tertiary-container)]/10 px-4 py-1 rounded-full border border-[var(--on-tertiary-container)]/20 flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[var(--on-tertiary-container)]" />
-                  <span className="text-sm font-semibold text-[var(--on-tertiary-fixed-variant)]">System Optimal</span>
+                <div className={`px-4 py-1 rounded-full border flex items-center gap-2 ${
+                  hasIssues
+                    ? "bg-amber-100 border-amber-300"
+                    : "bg-[var(--on-tertiary-container)]/10 border-[var(--on-tertiary-container)]/20"
+                }`}>
+                  <div className={`w-2 h-2 rounded-full ${hasIssues ? "bg-amber-500" : "bg-[var(--on-tertiary-container)]"}`} />
+                  <span className={`text-sm font-semibold ${hasIssues ? "text-amber-700" : "text-[var(--on-tertiary-fixed-variant)]"}`}>
+                    {hasIssues ? "Check Required" : "System Optimal"}
+                  </span>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4 mt-2">
@@ -38,7 +82,7 @@ export default function CustomerDashboard() {
                   <span className="material-symbols-outlined text-[var(--secondary)]">speed</span>
                   <div>
                     <p className="text-xs font-medium text-[var(--on-surface-variant)]">Odometer</p>
-                    <p className="text-sm font-semibold text-[var(--primary)]">64,250 km</p>
+                    <p className="text-sm font-semibold text-[var(--primary)]">{carMileage}</p>
                   </div>
                 </div>
                 <div className="bg-[var(--surface-container-low)] p-4 rounded-lg border border-[var(--outline-variant)] flex items-center gap-4">
@@ -109,6 +153,16 @@ export default function CustomerDashboard() {
           </div>
         </section>
       </main>
+
+      {/* Floating SOS Button */}
+      <Link href="/customer/sos" className="fixed bottom-24 right-6 w-16 h-16 bg-[var(--error)] rounded-full shadow-[0_8px_30px_rgb(186,26,26,0.4)] flex items-center justify-center text-white z-40 hover:scale-105 transition-transform group">
+        <div className="absolute inset-0 rounded-full bg-[var(--error)] opacity-40 animate-ping" />
+        <div className="relative flex flex-col items-center">
+          <span className="material-symbols-outlined text-[28px] leading-none mb-0.5">sos</span>
+          <span className="text-[9px] font-bold tracking-wider leading-none">HELP</span>
+        </div>
+      </Link>
+
       <BottomNavBar activeTab="Home" items={[
         { icon: "home_app_logo", label: "Home", href: "/customer/dashboard" },
         { icon: "garage", label: "Garage", href: "/customer/garage" },

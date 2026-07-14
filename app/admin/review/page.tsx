@@ -41,9 +41,9 @@ export default function DetailedReview() {
                 </span>
               </h1>
               <div className="flex flex-wrap items-center gap-6 mt-3 text-[var(--on-surface-variant)] text-sm">
-                <div className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">directions_car</span><span className="font-semibold">BMW X5</span></div>
-                <div className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">engineering</span><span className="font-semibold">Mechanic: Michael T.</span></div>
-                <div className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">calendar_today</span><span className="font-semibold">Oct 24, 2023 - 10:42 AM</span></div>
+                <div className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">directions_car</span><span className="font-semibold">2022 Tesla Model 3</span></div>
+                <div className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">engineering</span><span className="font-semibold">Mechanic: Sarah Jenkins</span></div>
+                <div className="flex items-center gap-2"><span className="material-symbols-outlined text-[18px]">calendar_today</span><span className="font-semibold">Oct 24, 2024 - 10:42 AM</span></div>
               </div>
             </div>
           </div>
@@ -58,27 +58,24 @@ export default function DetailedReview() {
               </div>
               <div className="p-6">
                 <div className="mb-6 rounded-lg overflow-hidden border border-[var(--outline-variant)] bg-[var(--surface-container)] relative h-72">
-                  <Image src="/images/transmission_gear.jpg" alt="Gearbox" fill className="object-cover" />
+                  <Image src="/images/car_camry.jpg" alt="Battery Cooling Module" fill className="object-cover" />
                 </div>
                 <div className="mb-6">
                   <h3 className="text-xs font-semibold text-[var(--on-surface-variant)] mb-3 uppercase tracking-wider">Diagnostic Codes</h3>
                   <div className="flex flex-wrap gap-2">
                     <div className="inline-flex items-center px-3 py-1.5 rounded-lg bg-[var(--error-container)]/50 border border-[var(--error-container)] text-[var(--on-error-container)] text-sm font-semibold">
-                      <span className="material-symbols-outlined text-[16px] mr-1.5">warning</span> P0734 - Gear 4 Incorrect Ratio
+                      <span className="material-symbols-outlined text-[16px] mr-1.5">warning</span> BMS_a066 - Battery Coolant Flow Low
                     </div>
                     <div className="inline-flex items-center px-3 py-1.5 rounded-lg bg-[var(--error-container)]/50 border border-[var(--error-container)] text-[var(--on-error-container)] text-sm font-semibold">
-                      <span className="material-symbols-outlined text-[16px] mr-1.5">warning</span> P0735 - Gear 5 Incorrect Ratio
-                    </div>
-                    <div className="inline-flex items-center px-3 py-1.5 rounded-lg bg-[var(--surface-container-high)] border border-[var(--outline-variant)] text-[var(--primary)] text-sm font-semibold">
-                      <span className="material-symbols-outlined text-[16px] mr-1.5">info</span> P0700 - Transmission Control System
+                      <span className="material-symbols-outlined text-[16px] mr-1.5">warning</span> THM_a043 - Thermal Management Pressure Drop
                     </div>
                   </div>
                 </div>
-                <div className="pl-4 border-l-4 border-[var(--on-tertiary-container)] mb-2">
+                <div className="pl-4 border-l-4 border-[var(--warning-orange)] mb-2">
                   <h3 className="text-xs font-semibold text-[var(--on-surface-variant)] mb-1 uppercase tracking-wider">Primary Recommendation</h3>
-                  <p className="text-xl font-semibold text-[var(--primary)] mb-3">Complete Gearbox Overhaul</p>
+                  <p className="text-xl font-semibold text-[var(--primary)] mb-3">Replace Supermanifold Coolant Pump</p>
                   <p className="text-sm text-[var(--on-surface-variant)] leading-relaxed">
-                    Inspected the transmission fluid and found heavy metal shavings. Removed the pan and identified significant wear on the 4th and 5th gear assemblies. The synchros are severely degraded. A complete gearbox overhaul is required.
+                    High voltage battery cooling system showing abnormal pressure drops. Thermal management module flagged for immediate review. Inspected the supermanifold and found a failing primary coolant pump causing the BMS to throttle charging. Replacement of the pump assembly is required.
                   </p>
                 </div>
               </div>
@@ -101,9 +98,9 @@ export default function DetailedReview() {
                   </thead>
                   <tbody className="divide-y divide-[var(--outline-variant)]">
                     {[
-                      {n:"OEM Transmission Rebuild Kit",t:"Parts",q:"1",p:"$1,250.00"},
-                      {n:"Synthetic Transmission Fluid",t:"Consumables",q:"7 L",p:"$185.50"},
-                      {n:"Transmission Overhaul Labor",t:"Labor",q:"12 hrs",p:"$1,800.00"}
+                      {n:"Tesla Coolant Pump Assembly",t:"Parts",q:"1",p:"₦ 145,000"},
+                      {n:"G48 Battery Coolant",t:"Consumables",q:"3 L",p:"₦ 24,000"},
+                      {n:"EV High Voltage System Labor",t:"Labor",q:"4 hrs",p:"₦ 120,000"}
                     ].map(i=>(
                       <tr key={i.n} className="hover:bg-[var(--surface-container-low)]">
                         <td className="py-4 px-6 text-sm">{i.n}</td>
@@ -116,15 +113,15 @@ export default function DetailedReview() {
                   <tfoot>
                     <tr className="bg-[var(--surface-container-low)]">
                       <td colSpan={3} className="py-4 px-6 text-sm text-[var(--on-surface-variant)] text-right uppercase tracking-wider font-semibold">Subtotal</td>
-                      <td className="py-4 px-6 text-sm font-semibold text-right">$3,235.50</td>
+                      <td className="py-4 px-6 text-sm font-semibold text-right">₦ 289,000</td>
                     </tr>
                     <tr className="bg-[var(--surface-container-low)] border-b border-[var(--outline-variant)]">
-                      <td colSpan={3} className="py-4 px-6 text-sm text-[var(--on-surface-variant)] text-right uppercase tracking-wider font-semibold">Tax (8%)</td>
-                      <td className="py-4 px-6 text-sm font-semibold text-right">$258.84</td>
+                      <td colSpan={3} className="py-4 px-6 text-sm text-[var(--on-surface-variant)] text-right uppercase tracking-wider font-semibold">Tax (7.5%)</td>
+                      <td className="py-4 px-6 text-sm font-semibold text-right">₦ 21,675</td>
                     </tr>
                     <tr className="bg-[var(--surface-container)]">
                       <td colSpan={3} className="py-5 px-6 text-xl font-semibold text-right">Estimated Total</td>
-                      <td className="py-5 px-6 text-xl font-semibold text-[var(--on-tertiary-container)] text-right">$3,494.34</td>
+                      <td className="py-5 px-6 text-xl font-semibold text-[var(--on-tertiary-container)] text-right">₦ 310,675</td>
                     </tr>
                   </tfoot>
                 </table>

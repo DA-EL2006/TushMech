@@ -3,11 +3,15 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+const ROLE_COOKIE = "tushmech_role";
+function selectRole(role: string, href: string) {
+  document.cookie = `${ROLE_COOKIE}=${role}; path=/; max-age=86400; SameSite=Lax`;
+  window.location.href = href;
+}
+
 export default function Home() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [showSplash, setShowSplash] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
@@ -72,7 +76,7 @@ export default function Home() {
           {/* Role Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {/* Customer */}
-            <Link href="/customer/onboarding" className="group bg-[var(--primary-container)] text-[var(--on-primary)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-2 hover:shadow-level-3 transition-all relative overflow-hidden border border-[var(--primary-container)]">
+            <button onClick={() => selectRole("CUSTOMER", "/customer/onboarding")} className="group bg-[var(--primary-container)] text-[var(--on-primary)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-2 hover:shadow-level-3 transition-all relative overflow-hidden border border-[var(--primary-container)] text-left">
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10 pointer-events-none" />
               <div className="bg-white/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-[32px] text-white">directions_car</span>
@@ -81,10 +85,10 @@ export default function Home() {
                 <h3 className="text-2xl font-semibold text-white mb-1">Customer Portal</h3>
                 <p className="text-[var(--inverse-primary)] opacity-80">Dashboard, book mechanics, shop parts, finance repairs</p>
               </div>
-            </Link>
+            </button>
 
             {/* Mechanic */}
-            <Link href="/mechanic/onboarding" className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all">
+            <button onClick={() => selectRole("MECHANIC", "/mechanic/onboarding")} className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all text-left">
               <div className="bg-[var(--secondary-container)]/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-[32px] text-[var(--secondary)]">build</span>
               </div>
@@ -92,10 +96,10 @@ export default function Home() {
                 <h3 className="text-2xl font-semibold text-[var(--primary)] mb-1">Mechanic Portal</h3>
                 <p className="text-[var(--on-surface-variant)]">Profile, wallet, dispatch, earnings & tool loans</p>
               </div>
-            </Link>
+            </button>
 
             {/* Admin */}
-            <Link href="/admin/onboarding" className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all">
+            <button onClick={() => selectRole("ADMIN", "/admin/onboarding")} className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all text-left">
               <div className="bg-[var(--secondary-container)]/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-[32px] text-[var(--secondary)]">admin_panel_settings</span>
               </div>
@@ -103,10 +107,10 @@ export default function Home() {
                 <h3 className="text-2xl font-semibold text-[var(--primary)] mb-1">Admin Control</h3>
                 <p className="text-[var(--on-surface-variant)]">Live control room, QA queue, report review</p>
               </div>
-            </Link>
+            </button>
 
             {/* Vendor */}
-            <Link href="/vendor/inventory" className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all">
+            <button onClick={() => selectRole("VENDOR", "/vendor/onboarding")} className="group bg-[var(--surface-container-lowest)] border border-[var(--outline-variant)] rounded-xl p-8 flex flex-col justify-between min-h-[200px] shadow-level-1 hover:shadow-level-2 hover:border-[var(--secondary)] transition-all text-left">
               <div className="bg-[var(--secondary-container)]/10 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-[32px] text-[var(--secondary)]">inventory_2</span>
               </div>
@@ -114,7 +118,7 @@ export default function Home() {
                 <h3 className="text-2xl font-semibold text-[var(--primary)] mb-1">Vendor Hub</h3>
                 <p className="text-[var(--on-surface-variant)]">Inventory management, escrow payouts, QA reports</p>
               </div>
-            </Link>
+            </button>
           </div>
 
           {/* Quick Links */}

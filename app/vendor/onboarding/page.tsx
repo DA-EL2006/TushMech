@@ -28,7 +28,9 @@ export default function VendorOnboarding() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/vendor/inventory");
+    // Persist vendor profile data so dashboard and sidebar can read it
+    localStorage.setItem("tushmech_vendor_profile", JSON.stringify(formData));
+    router.push("/vendor/overview");
   };
 
   return (

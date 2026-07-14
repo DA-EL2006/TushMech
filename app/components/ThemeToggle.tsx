@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ className = "" }: { className?: string }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -12,7 +12,7 @@ export default function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return <div className="w-10 h-10" />; // placeholder to prevent layout shift
+    return <div className={`w-10 h-10 ${className}`} />; // placeholder to prevent layout shift
   }
 
   const isDark = theme === "dark";
@@ -20,7 +20,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="w-10 h-10 flex items-center justify-center rounded-full text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-low)] transition-colors active:scale-95"
+      className={`w-10 h-10 flex items-center justify-center rounded-full text-[var(--on-surface-variant)] hover:bg-[var(--surface-container-low)] transition-colors active:scale-95 ${className}`}
       aria-label="Toggle Dark Mode"
     >
       <span className="material-symbols-outlined text-[24px]">

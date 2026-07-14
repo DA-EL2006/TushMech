@@ -1,21 +1,36 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+interface VendorProfile { contactName: string; businessName: string; [key: string]: string; }
 
 interface VendorSideNavProps {
   activeItem?: string;
 }
 
 const navItems = [
-  { icon: "grid_view", label: "Overview", href: "#" },
+  { icon: "grid_view", label: "Overview", href: "/vendor/overview" },
   { icon: "inventory_2", label: "Inventory", href: "/vendor/inventory" },
   { icon: "receipt_long", label: "Orders", href: "/vendor/orders" },
   { icon: "account_balance", label: "Payouts", href: "/vendor/payouts" },
-  { icon: "fact_check", label: "QA Reports", href: "#" },
+  { icon: "fact_check", label: "QA Reports", href: "/vendor/qa-reports" },
 ];
 
 export default function VendorSideNav({ activeItem = "Inventory" }: VendorSideNavProps) {
+  const [profile, setProfile] = useState<VendorProfile | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("tushmech_vendor_profile");
+      if (raw) setProfile(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  const vendorName = profile?.contactName || "Sarah Jenkins";
+  const businessName = profile?.businessName || "Vendor Relations";
+
   return (
     <aside className="w-64 bg-[var(--primary-container)] text-[var(--on-primary)] h-full hidden md:flex flex-col flex-shrink-0 z-20 shadow-level-2">
       <div className="p-6 border-b border-[var(--surface-tint)]/50 flex items-center gap-3">
@@ -61,8 +76,8 @@ export default function VendorSideNav({ activeItem = "Inventory" }: VendorSideNa
           height={36}
         />
         <div>
-          <p className="text-sm font-medium text-[var(--on-primary)]">Sarah Jenkins</p>
-          <p className="text-xs text-[var(--on-primary-container)]">Vendor Relations</p>
+          <p className="text-sm font-medium text-[var(--on-primary)] line-clamp-1">{vendorName}</p>
+          <p className="text-xs text-[var(--on-primary-container)] line-clamp-1">{businessName}</p>
         </div>
       </div>
     </aside>

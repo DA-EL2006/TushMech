@@ -2,23 +2,28 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
-
 import { Suspense } from "react";
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
+import { useCartStore } from "../../../store/cartStore";
 
 function CheckoutFinanceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data: session } = useSession();
   
   const [invoice, setInvoice] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [payLoading, setPayLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const invoiceId = searchParams?.get("invoice_id") || "TM-4921"; // Default to seeded invoice
+  const { cart, includeMechanicInstall, getCartTotal, clearCart } = useCartStore();
+
+  const invoiceId = searchParams?.get("invoice_id");
 
   useEffect(() => {
+    if (!invoiceId) {
+      setLoading(false);
+      return;
+    }
     const fetchInvoice = async () => {
       try {
         const res = await fetch(`/api/invoices/${invoiceId}`);
@@ -34,43 +39,62 @@ function CheckoutFinanceContent() {
     fetchInvoice();
   }, [invoiceId]);
 
-  const handlePaystack = async () => {
-    if (!session?.user?.email) {
-      alert("Please sign in to proceed with payment.");
-      router.push("/login");
-      return;
-    }
-    
+  // Determine pricing details based on whether it's an invoice or cart checkout
+  const subtotal = invoice ? invoice.subtotal : getCartTotal() + (includeMechanicInstall ? 15000 : 0);
+  const tax = invoice ? invoice.tax : subtotal * 0.075;
+  const totalAmount = invoice ? invoice.total_amount : subtotal + tax;
+
+  const flutterwaveConfig = {
+    public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || '',
+    tx_ref: Date.now().toString(),
+    amount: totalAmount,
+    currency: 'NGN',
+    payment_options: 'card,mobilemoney,ussd',
+    customer: {
+      email: 'demo@tushmech.ng',
+      phone_number: '08102909304',
+      name: 'TushMech Customer',
+    },
+    customizations: {
+      title: 'TushMech Payment',
+      description: invoiceId ? `Payment for Invoice #${invoiceId}` : 'Payment for Spare Parts & Services',
+      logo: 'https://i.imgur.com/K3t5o5O.png', // Temporary external placeholder for Flutterwave modal
+    },
+  };
+
+  const handleFlutterPayment = useFlutterwave(flutterwaveConfig);
+
+  const handlePay = () => {
     setPayLoading(true);
-    try {
-      const res = await fetch("/api/checkout/paystack", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          invoice_id: invoice.id,
-          email: session.user.email
-        })
-      });
-      
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
-      
-      // Redirect to Paystack (or simulated success page)
-      window.location.href = data.authorization_url;
-    } catch (err: any) {
-      alert(err.message || "Payment initialization failed.");
-      setPayLoading(false);
-    }
+    handleFlutterPayment({
+      callback: (response) => {
+         if (response.status === "successful") {
+           clearCart();
+           alert("Payment successful! Your order has been placed.");
+           router.push("/customer/dashboard");
+         } else {
+           alert("Payment failed or was cancelled.");
+         }
+         closePaymentModal();
+         setPayLoading(false);
+      },
+      onClose: () => {
+        setPayLoading(false);
+      },
+    });
   };
 
   const handleBNPL = () => {
-    // Navigate to the finance application flow
-    router.push(`/customer/finance?invoice_id=${invoice.id}`);
+    if (invoiceId) {
+      router.push(`/customer/finance?invoice_id=${invoiceId}`);
+    } else {
+      alert("Repair Now, Pay Later is currently only available for Diagnostic Invoices. For cart items, please Pay in Full.");
+    }
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><span className="material-symbols-outlined animate-spin text-4xl text-[var(--electric-blue)]">progress_activity</span></div>;
   
-  if (error || !invoice) return <div className="min-h-screen flex items-center justify-center flex-col gap-4"><p className="text-red-500 font-semibold">{error}</p><button onClick={() => router.back()} className="px-4 py-2 bg-gray-200 rounded">Go Back</button></div>;
+  if (error || (!invoice && cart.length === 0)) return <div className="min-h-screen flex items-center justify-center flex-col gap-4"><p className="text-red-500 font-semibold">{error || "Your cart is empty."}</p><button onClick={() => router.back()} className="px-4 py-2 bg-gray-200 rounded">Go Back</button></div>;
 
   const estimateItems = invoice.job?.diagnostic_report?.estimate_items || [];
 
@@ -87,28 +111,51 @@ function CheckoutFinanceContent() {
           <section className="bg-white rounded-xl border border-[var(--outline-variant)] shadow-level-1 overflow-hidden">
             <div className="bg-[var(--surface-container-low)] px-6 py-4 border-b border-[var(--outline-variant)] flex justify-between items-center">
               <h2 className="text-sm font-semibold text-[var(--primary)]">Service Summary</h2>
-              <span className="bg-[var(--electric-blue)]/10 text-[var(--electric-blue)] px-2 py-1 rounded-full text-xs font-semibold">Invoice #{invoice.id}</span>
+              <span className="bg-[var(--electric-blue)]/10 text-[var(--electric-blue)] px-2 py-1 rounded-full text-xs font-semibold">
+                {invoice ? `Invoice #${invoice.id}` : 'Cart Checkout'}
+              </span>
             </div>
             
             <div className="p-6 space-y-6">
-              {estimateItems.length > 0 ? estimateItems.map((i: any) => (
-                <div key={i.id} className="flex justify-between items-start pb-4 border-b border-[var(--outline-variant)]">
-                  <div>
-                    <h3 className="text-sm font-semibold">{i.description}</h3>
-                    <p className="text-xs text-[var(--outline)] mt-1">Type: {i.type} | Qty: {i.quantity}</p>
+              {invoice ? (
+                estimateItems.length > 0 ? estimateItems.map((i: any) => (
+                  <div key={i.id} className="flex justify-between items-start pb-4 border-b border-[var(--outline-variant)]">
+                    <div>
+                      <h3 className="text-sm font-semibold">{i.description}</h3>
+                      <p className="text-xs text-[var(--outline)] mt-1">Type: {i.type} | Qty: {i.quantity}</p>
+                    </div>
+                    <span className="text-sm font-semibold">₦{i.total_price.toLocaleString()}</span>
                   </div>
-                  <span className="text-sm font-semibold">₦{i.total_price.toLocaleString()}</span>
-                </div>
-              )) : (
-                <p className="text-sm text-gray-500 italic">No line items found.</p>
+                )) : <p className="text-sm text-gray-500 italic">No line items found.</p>
+              ) : (
+                <>
+                  {cart.map(item => (
+                    <div key={item.id} className="flex justify-between items-start pb-4 border-b border-[var(--outline-variant)]">
+                      <div>
+                        <h3 className="text-sm font-semibold max-w-[200px] truncate">{item.name}</h3>
+                        <p className="text-xs text-[var(--outline)] mt-1">Type: Spare Part | Qty: {item.qty}</p>
+                      </div>
+                      <span className="text-sm font-semibold">₦{(item.price * item.qty).toLocaleString()}</span>
+                    </div>
+                  ))}
+                  {includeMechanicInstall && (
+                    <div className="flex justify-between items-start pb-4 border-b border-[var(--outline-variant)]">
+                      <div>
+                        <h3 className="text-sm font-semibold text-[var(--secondary)]">Mobile Mechanic Install</h3>
+                        <p className="text-xs text-[var(--outline)] mt-1">Type: Service | Qty: 1</p>
+                      </div>
+                      <span className="text-sm font-semibold">₦15,000</span>
+                    </div>
+                  )}
+                </>
               )}
               
               <div className="space-y-2 pt-2">
-                <div className="flex justify-between"><span className="text-[var(--on-surface-variant)]">Subtotal</span><span>₦{invoice.subtotal.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span className="text-[var(--on-surface-variant)]">VAT (7.5%)</span><span>₦{invoice.tax.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-[var(--on-surface-variant)]">Subtotal</span><span>₦{subtotal.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-[var(--on-surface-variant)]">VAT (7.5%)</span><span>₦{tax.toLocaleString()}</span></div>
                 <div className="flex justify-between pt-4 border-t border-[var(--outline-variant)]">
                   <span className="text-2xl font-semibold">Total Amount</span>
-                  <span className="text-2xl font-semibold text-[var(--electric-blue)]">₦{invoice.total_amount.toLocaleString()}</span>
+                  <span className="text-2xl font-semibold text-[var(--electric-blue)]">₦{totalAmount.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -124,7 +171,7 @@ function CheckoutFinanceContent() {
             <div className="p-6 space-y-6">
               <div className="text-center">
                 <p className="text-[var(--on-surface-variant)] mb-1">Pay in 4 easy installments of</p>
-                <h3 className="text-3xl font-semibold text-[var(--electric-blue)]">₦{(invoice.total_amount / 4).toLocaleString()}</h3>
+                <h3 className="text-3xl font-semibold text-[var(--electric-blue)]">₦{(totalAmount / 4).toLocaleString()}</h3>
                 <p className="text-xs text-[var(--outline)] mt-1">0% Interest if paid in full within 30 days.</p>
               </div>
               <button 
@@ -140,11 +187,11 @@ function CheckoutFinanceContent() {
           <section className="bg-white rounded-xl border border-[var(--outline-variant)] shadow-level-1 p-6">
             <div className="flex items-center gap-4 mb-6"><span className="material-symbols-outlined fill text-[var(--primary)] text-2xl">credit_card</span><h2 className="text-sm font-semibold">Pay in Full</h2></div>
             <button 
-              onClick={handlePaystack}
+              onClick={handlePay}
               disabled={payLoading}
               className="w-full bg-[var(--deep-navy)] text-white h-12 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 active:scale-95 hover:opacity-90 disabled:opacity-70"
             >
-              {payLoading ? <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span> : `Pay ₦${invoice.total_amount.toLocaleString()} Now`}
+              {payLoading ? <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span> : `Pay ₦${totalAmount.toLocaleString()} via Flutterwave`}
             </button>
           </section>
         </div>
