@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 export default function VendorOnboarding() {
   const router = useRouter();
@@ -26,8 +27,35 @@ export default function VendorOnboarding() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const email = formData.email || "vendor_demo@tushmech.com";
+    const password = "demo_vendor_password_123!";
+
+    try {
+      await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: formData.contactName.split(" ")[0] || "Vendor",
+          last_name: formData.contactName.split(" ")[1] || "User",
+          email: email,
+          phone: formData.phone || "0000000000",
+          password: password,
+          role: "VENDOR"
+        })
+      });
+
+      await signIn("credentials", {
+        email: email,
+        password: password,
+        redirect: false
+      });
+    } catch (err) {
+      console.error("Vendor auto-auth failed:", err);
+    }
+
     // Persist vendor profile data so dashboard and sidebar can read it
     localStorage.setItem("tushmech_vendor_profile", JSON.stringify(formData));
     router.push("/vendor/overview");

@@ -8,18 +8,6 @@ import { useCartStore } from "../../../store/cartStore";
 
 interface GarageVehicle { make: string; model: string; year: string; [key: string]: string; }
 
-
-const parts = [
-  { id: "p1", img: "/images/obd2_scanner.jpg", name: "Denso Oxygen Sensor — Front", price: 18500, type: "OEM", compat: ["2016 Camry", "2019 Corolla"], category: "Sensors", rating: "4.8", reviews: "92" },
-  { id: "p2", img: "/images/tire_inflator.jpg", name: "Brembo Brake Pad Set — Front", price: 32000, type: "OEM", compat: ["2016 Camry"], category: "Brakes", rating: "4.9", reviews: "210" },
-  { id: "p3", img: "/images/led_interior.jpg", name: "Bosch Iridium Spark Plugs (4-pack)", price: 14500, type: "Aftermarket", compat: ["2016 Camry", "2019 Corolla"], category: "Engine", rating: "4.7", reviews: "134" },
-  { id: "p4", img: "/images/charger_mount.jpg", name: "Castrol Edge 5W-30 Full Synthetic (5L)", price: 22000, type: "OEM", compat: ["2016 Camry", "2019 Corolla"], category: "Fluids", rating: "4.9", reviews: "488" },
-  { id: "p5", img: "/images/obd2_scanner.jpg", name: "Toyota OEM Air Filter — Camry 2016", price: 9800, type: "OEM", compat: ["2016 Camry"], category: "Filters", rating: "4.6", reviews: "67" },
-  { id: "p6", img: "/images/dashcam_hero.jpg", name: "Bosch Alternator Belt — K060882", price: 12500, type: "Aftermarket", compat: ["2016 Camry", "2019 Corolla"], category: "Engine", rating: "4.5", reviews: "44" },
-  { id: "p7", img: "/images/tire_inflator.jpg", name: "Ferodo Rear Drum Brake Shoes", price: 16000, type: "Aftermarket", compat: ["2019 Corolla"], category: "Brakes", rating: "4.6", reviews: "78" },
-  { id: "p8", img: "/images/led_interior.jpg", name: "Mann-Filter Cabin Air Filter", price: 7500, type: "OEM", compat: ["2016 Camry", "2019 Corolla"], category: "Filters", rating: "4.8", reviews: "155" },
-];
-
 const categories = ["All", "Brakes", "Engine", "Filters", "Sensors", "Fluids"];
 
 export default function SparePartsShop() {
@@ -31,9 +19,29 @@ export default function SparePartsShop() {
   const [bookPart, setBookPart] = useState<string | null>(null);
   const [userCars, setUserCars] = useState<string[]>(["All Parts", "2016 Camry", "2019 Corolla"]);
   const [mounted, setMounted] = useState(false);
+  const [parts, setParts] = useState<any[]>([]);
 
   useEffect(() => {
     setMounted(true);
+    // Fetch dynamic products
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        if (data.success) {
+          // map image_url to img for cart compatibility
+          const mapped = data.products.map((p: any) => ({
+            ...p,
+            img: p.image_url || "/images/tire_inflator.jpg"
+          }));
+          setParts(mapped);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchProducts();
+
     try {
       const raw = localStorage.getItem("tushmech_garage");
       if (raw) {

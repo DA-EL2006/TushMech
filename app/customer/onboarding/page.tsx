@@ -68,7 +68,7 @@ export default function CustomerOnboarding() {
       
       if (!regRes.ok) {
         const error = await regRes.json();
-        alert(`Registration failed: ${error.message}`);
+        alert(`Registration failed: ${error.message}${error.details ? ' - ' + error.details : ''}`);
         setLoading(false);
         return;
       }
@@ -89,7 +89,7 @@ export default function CustomerOnboarding() {
       // 3. Save Vehicles
       for (const car of cars) {
         if (!car.make || !car.model) continue;
-        await fetch("/api/vehicles", {
+        const vehicleRes = await fetch("/api/vehicles", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -101,6 +101,10 @@ export default function CustomerOnboarding() {
             currentMileage: car.mileage,
           }),
         });
+        if (!vehicleRes.ok) {
+          const vErr = await vehicleRes.json();
+          alert(`Failed to save vehicle: ${vErr.message}${vErr.details ? ' - ' + vErr.details : ''}`);
+        }
       }
 
       // Fallback for demo UX

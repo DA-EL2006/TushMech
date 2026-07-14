@@ -71,7 +71,7 @@ export default function LoginPage() {
             {/* VENDOR */}
             <button
               onClick={() => selectRole("VENDOR", "/vendor/onboarding")}
-              className="w-full h-14 border-2 border-[var(--deep-navy)] text-[var(--deep-navy)] dark:border-white dark:text-white rounded-lg text-lg font-semibold shadow-sm hover:bg-[var(--deep-navy)] hover:text-white transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+              className="w-full h-14 bg-white border-2 border-[var(--outline-variant)] text-[var(--primary)] rounded-lg text-lg font-semibold shadow-sm hover:bg-[var(--surface-container-low)] transition-all active:scale-[0.98] flex items-center justify-center gap-3"
             >
               <span className="material-symbols-outlined text-[24px]">local_shipping</span>
               Vendor

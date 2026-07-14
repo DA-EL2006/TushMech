@@ -62,10 +62,10 @@ export async function POST(request: Request) {
       { message: "User created successfully", user: { id: user.id, email: user.email, role: user.role } },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Registration error:", error);
     return NextResponse.json(
-      { message: "Internal server error" },
+      { message: "Internal server error", details: error?.message || String(error) },
       { status: 500 }
     );
   }

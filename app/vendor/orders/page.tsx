@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import VendorSideNav from "../../components/VendorSideNav";
+import BottomNavBar from "../../components/BottomNavBar";
 
 type Status = "All" | "Pending" | "Shipped" | "Delivered" | "Disputed";
 
@@ -197,14 +198,13 @@ export default function VendorOrders() {
       </main>
 
       {/* Mobile nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 h-16 bg-white border-t border-[var(--outline-variant)] rounded-t-xl">
-        {[["grid_view","Overview","#"],["inventory_2","Inventory","/vendor/inventory"],["receipt_long","Orders","/vendor/orders"],["more_horiz","More","#"]].map(([icon,label,href])=>(
-          <a key={label} href={href} className={`flex flex-col items-center justify-center ${label==="Orders"?"text-[var(--secondary)]":"text-[var(--on-surface-variant)]"}`}>
-            <span className={`material-symbols-outlined ${label==="Orders"?"fill":""}`}>{icon}</span>
-            <span className={`text-[10px] ${label==="Orders"?"font-bold":""}`}>{label}</span>
-          </a>
-        ))}
-      </nav>
+      <BottomNavBar activeTab="Orders" items={[
+  { icon: "grid_view", label: "Overview", href: "/vendor/overview" },
+  { icon: "inventory_2", label: "Inventory", href: "/vendor/inventory" },
+  { icon: "receipt_long", label: "Orders", href: "/vendor/orders" },
+  { icon: "account_balance", label: "Payouts", href: "/vendor/payouts" },
+  { icon: "fact_check", label: "QA Reports", href: "/vendor/qa-reports" },
+]} />
     </div>
   );
 }

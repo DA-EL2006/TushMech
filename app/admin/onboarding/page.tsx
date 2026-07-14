@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 export default function AdminOnboarding() {
   const router = useRouter();
@@ -19,8 +20,38 @@ export default function AdminOnboarding() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Auto-register and sign in the admin so API routes (like /api/jobs) work
+    const email = formData.workEmail || "admin_demo@tushmech.com";
+    const password = "demo_admin_password_123!";
+
+    try {
+      // Attempt to register
+      await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: formData.fullName.split(" ")[0] || "Admin",
+          last_name: formData.fullName.split(" ")[1] || "User",
+          email: email,
+          phone: formData.phone || "0000000000",
+          password: password,
+          role: "ADMIN"
+        })
+      });
+
+      // Sign in
+      await signIn("credentials", {
+        email: email,
+        password: password,
+        redirect: false
+      });
+    } catch (err) {
+      console.error("Admin auto-auth failed:", err);
+    }
+
     // Persist admin profile data so /admin/control-room and sidebar can read it
     localStorage.setItem("tushmech_admin_profile", JSON.stringify(formData));
     router.push("/admin/control-room");

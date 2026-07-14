@@ -121,6 +121,7 @@ model User {
   
   wallet        Wallet?
   vendor_orders VendorOrder[] @relation("VendorOrders")
+  products      Product[]     @relation("VendorProducts")
 }
 
 model Vehicle {
@@ -242,4 +243,22 @@ model VendorOrder {
 
   vendor         User     @relation("VendorOrders", fields: [vendor_id], references: [id])
   job            Job      @relation(fields: [job_id], references: [id])
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  vendor_id   String
+  name        String
+  price       Float
+  type        String   // "OEM" | "Aftermarket"
+  category    String
+  compat      String[] 
+  stock       Int      @default(0)
+  image_url   String?
+  rating      Float    @default(0.0)
+  reviews     Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  vendor      User     @relation("VendorProducts", fields: [vendor_id], references: [id])
 }
