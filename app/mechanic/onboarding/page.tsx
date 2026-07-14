@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
@@ -20,6 +20,19 @@ export default function MechanicOnboarding() {
     accountNumber: "",
     bankName: "",
   });
+
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem("tushmech_mechanic_draft");
+      if (savedData) setFormData(JSON.parse(savedData));
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tushmech_mechanic_draft", JSON.stringify(formData));
+  }, [formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,6 +75,7 @@ export default function MechanicOnboarding() {
 
       // Fallback local storage
       localStorage.setItem("tushmech_mechanic_profile", JSON.stringify(formData));
+      localStorage.removeItem("tushmech_mechanic_draft");
       router.push("/mechanic/dashboard");
     } catch (err) {
       console.error(err);

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
@@ -20,6 +20,19 @@ export default function VendorOnboarding() {
     bankName: "",
     taxId: "",
   });
+
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem("tushmech_vendor_draft");
+      if (savedData) setFormData(JSON.parse(savedData));
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tushmech_vendor_draft", JSON.stringify(formData));
+  }, [formData]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -58,6 +71,7 @@ export default function VendorOnboarding() {
 
     // Persist vendor profile data so dashboard and sidebar can read it
     localStorage.setItem("tushmech_vendor_profile", JSON.stringify(formData));
+    localStorage.removeItem("tushmech_vendor_draft");
     router.push("/vendor/overview");
   };
 

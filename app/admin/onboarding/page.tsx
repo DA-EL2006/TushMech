@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
@@ -15,6 +15,19 @@ export default function AdminOnboarding() {
     phone: "",
     emergencyContact: "",
   });
+
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem("tushmech_admin_draft");
+      if (savedData) setFormData(JSON.parse(savedData));
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tushmech_admin_draft", JSON.stringify(formData));
+  }, [formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,6 +67,7 @@ export default function AdminOnboarding() {
 
     // Persist admin profile data so /admin/control-room and sidebar can read it
     localStorage.setItem("tushmech_admin_profile", JSON.stringify(formData));
+    localStorage.removeItem("tushmech_admin_draft");
     router.push("/admin/control-room");
   };
 

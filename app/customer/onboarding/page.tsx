@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
@@ -33,6 +33,26 @@ export default function CustomerOnboarding() {
     id: "1", make: "", model: "", year: "", vin: "", engine: "", transmission: "",
     drivetrain: "", fuelType: "", mileage: "", licensePlate: "", color: "", knownIssues: ""
   }]);
+
+  useEffect(() => {
+    try {
+      const savedProfile = localStorage.getItem("tushmech_customer_draft_profile");
+      if (savedProfile) setProfile(JSON.parse(savedProfile));
+      
+      const savedCars = localStorage.getItem("tushmech_customer_draft_cars");
+      if (savedCars) setCars(JSON.parse(savedCars));
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tushmech_customer_draft_profile", JSON.stringify(profile));
+  }, [profile]);
+
+  useEffect(() => {
+    localStorage.setItem("tushmech_customer_draft_cars", JSON.stringify(cars));
+  }, [cars]);
 
   const addAnotherCar = () => {
     setCars([
@@ -109,10 +129,13 @@ export default function CustomerOnboarding() {
 
       // Fallback for demo UX
       localStorage.setItem("tushmech_garage", JSON.stringify(cars));
+      // Clear drafts on success
+      localStorage.removeItem("tushmech_customer_draft_profile");
+      localStorage.removeItem("tushmech_customer_draft_cars");
       router.push("/customer/dashboard");
-    } catch (err) {
-      console.error(err);
-      alert("An unexpected error occurred.");
+    } catch (err: any) {
+      console.error("Caught unexpected error:", err);
+      alert(`An unexpected error occurred: ${err?.message || String(err)}`);
     } finally {
       setLoading(false);
     }
