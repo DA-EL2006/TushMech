@@ -8,7 +8,7 @@ import { useCartStore } from "../../../store/cartStore";
 
 interface GarageVehicle { make: string; model: string; year: string; [key: string]: string; }
 
-const categories = ["All", "Brakes", "Engine", "Filters", "Sensors", "Fluids"];
+const categories = ["All", "Brakes", "Engine", "Filters", "Fluids", "Electrical & Ignition", "Suspension & Steering", "Cooling System", "Accessories & Comfort", "Tools & Diagnostics"];
 
 export default function SparePartsShop() {
   const { cart, addToCart, updateQuantity, removeFromCart, getCartTotal, getCartCount, includeMechanicInstall, toggleMechanicInstall, clearCart } = useCartStore();
@@ -130,7 +130,7 @@ export default function SparePartsShop() {
               <div className="p-3 flex flex-col flex-grow">
                 <div className="flex items-center gap-1 mb-1">
                   <span className="material-symbols-outlined text-[12px] text-[var(--error)]" style={{fontVariationSettings:"'FILL' 1"}}>star</span>
-                  <span className="text-[10px] text-[var(--on-surface-variant)]">{p.rating} ({p.reviews})</span>
+                  <span className="text-[10px] text-[var(--on-surface-variant)]">{typeof p.rating === 'number' ? p.rating.toFixed(1) : p.rating} ({p.reviews})</span>
                 </div>
                 <h4 className="text-xs font-semibold text-[var(--primary)] mb-2 line-clamp-2 flex-grow">{p.name}</h4>
                 <p className="text-sm font-bold text-[var(--primary)] mb-3">₦ {p.price.toLocaleString()}</p>

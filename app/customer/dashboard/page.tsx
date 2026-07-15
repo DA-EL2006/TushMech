@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import TopAppBar from "../../components/TopAppBar";
 import BottomNavBar from "../../components/BottomNavBar";
+import { findMatchingCarImage } from "../../lib/carDatabase";
 
 interface GarageVehicle { make: string; model: string; year: string; mileage: string; licensePlate: string; knownIssues: string; [key: string]: string; }
 
@@ -23,6 +24,15 @@ export default function CustomerDashboard() {
   const carPlate = primaryCar?.licensePlate || "ABC-1234";
   const carMileage = primaryCar?.mileage ? `${parseInt(primaryCar.mileage).toLocaleString()} km` : "64,250 km";
   const hasIssues = !!primaryCar?.knownIssues;
+
+  const carImageUrl = primaryCar ? findMatchingCarImage({
+    make: primaryCar.make,
+    model: primaryCar.model,
+    year: primaryCar.year,
+    transmission: primaryCar.transmission,
+    fuelType: primaryCar.fuelType,
+    engine: primaryCar.engine
+  }) : findMatchingCarImage({ make: "Toyota", model: "Camry", year: 2016 });
 
   return (
     <div className="min-h-screen bg-[var(--background)] pb-20 pt-16">
@@ -56,9 +66,13 @@ export default function CustomerDashboard() {
           </div>
           <Link href="/customer/garage" className="bg-[var(--surface-container-lowest)] rounded-xl border border-[var(--outline-variant)] shadow-level-1 p-6 flex flex-col md:flex-row gap-6 items-center relative overflow-hidden hover:border-[var(--secondary)] transition-colors">
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--surface-bright)] to-transparent opacity-50 z-0 pointer-events-none" />
-            {/* Vehicle icon placeholder — image removed for dynamic mode */}
+            {/* Vehicle Image */}
             <div className="relative z-10 w-full md:w-1/3 aspect-[4/3] rounded-lg overflow-hidden border border-[var(--outline-variant)] bg-gradient-to-br from-[var(--primary-container)] to-[var(--deep-navy)] flex items-center justify-center">
-              <span className="material-symbols-outlined text-white/60 text-[80px]" style={{ fontVariationSettings: "'FILL' 1" }}>directions_car</span>
+              {carImageUrl ? (
+                <img src={carImageUrl} alt={carName} className="w-full h-full object-cover opacity-90 mix-blend-screen" />
+              ) : (
+                <span className="material-symbols-outlined text-white/60 text-[80px]" style={{ fontVariationSettings: "'FILL' 1" }}>directions_car</span>
+              )}
             </div>
             <div className="relative z-10 flex-grow flex flex-col gap-2 w-full">
               <div className="flex justify-between items-start flex-wrap gap-2">

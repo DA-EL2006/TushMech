@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { marketplaceProducts } from "../../lib/marketplaceData";
 
 export async function GET(request: Request) {
   try {
@@ -15,7 +16,39 @@ export async function GET(request: Request) {
       orderBy: { created_at: "desc" },
     });
     
-    return NextResponse.json({ success: true, products });
+    // Map marketplace products
+    const mappedMarketplace = marketplaceProducts.map(p => {
+      // Map category to match or keep original
+      let mappedCat = p.category;
+      if (p.category === "Braking System") mappedCat = "Brakes";
+      if (p.category === "Filters & Maintenance") {
+        if (p.subcategory === "Fluids" || p.subcategory === "Engine Oil") mappedCat = "Fluids";
+        else mappedCat = "Filters";
+      }
+      if (p.category === "Engine Parts") mappedCat = "Engine";
+      
+      const isOem = p.name.includes("OEM") || p.name.includes("Genuine") || p.brand === "Toyota" || p.brand === "Honda" || p.brand === "BMW";
+      
+      return {
+        id: `mp-${p.id}`,
+        vendor_id: "marketplace",
+        name: p.name,
+        price: p.price,
+        type: isOem ? "OEM" : "Aftermarket",
+        category: mappedCat,
+        compat: p.compatibleVehicles,
+        stock: p.stock,
+        image_url: p.imageUrl,
+        rating: 4.5 + (Math.random() * 0.5),
+        reviews: Math.floor(Math.random() * 150) + 15,
+        created_at: new Date().toISOString()
+      };
+    });
+    
+    // If vendorId is provided, don't include marketplace products
+    const allProducts = vendorId ? products : [...products, ...mappedMarketplace];
+    
+    return NextResponse.json({ success: true, products: allProducts });
   } catch (error) {
     console.error("Failed to fetch products:", error);
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });

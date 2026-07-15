@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+import { findMatchingCarImage } from "../../lib/carDatabase";
 
 interface CarDetails {
   id: string;
@@ -187,19 +188,40 @@ export default function CustomerOnboarding() {
             </div>
           </div>
 
-          {cars.map((car, index) => (
+          {cars.map((car, index) => {
+            const matchedImage = findMatchingCarImage({
+              make: car.make,
+              model: car.model,
+              year: car.year,
+              transmission: car.transmission,
+              fuelType: car.fuelType,
+              engine: car.engine,
+            });
+
+            return (
             <div key={car.id} className="bg-[var(--surface-container-lowest)] rounded-2xl shadow-level-2 border border-[var(--outline-variant)] overflow-hidden relative transition-all">
               
-              <div className="bg-[var(--primary-container)] px-6 py-4 flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[var(--secondary)]">directions_car</span>
-                  Vehicle {index + 1}
-                </h3>
+              <div className="bg-[var(--primary-container)] px-6 py-6 md:py-10 flex justify-between items-start md:items-center relative overflow-hidden flex-col md:flex-row gap-4">
+                {matchedImage && (
+                  <div className="absolute inset-0 opacity-40 mix-blend-screen bg-center bg-cover pointer-events-none" style={{ backgroundImage: `url(${matchedImage})` }} />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-container)] to-transparent pointer-events-none" />
+                
+                <div className="relative z-10">
+                  <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+                    {!matchedImage && <span className="material-symbols-outlined text-[var(--secondary)]">directions_car</span>}
+                    Vehicle {index + 1}
+                  </h3>
+                  {matchedImage && car.make && car.model && (
+                    <p className="text-white/80 font-medium mt-1 ml-1">{car.year} {car.make} {car.model}</p>
+                  )}
+                </div>
+
                 {cars.length > 1 && (
                   <button 
                     type="button" 
                     onClick={() => removeCar(car.id)}
-                    className="text-[var(--on-primary-container)] hover:text-[var(--error)] transition-colors flex items-center gap-1 text-sm font-semibold"
+                    className="text-[var(--on-primary-container)] hover:text-white bg-black/20 hover:bg-[var(--error)] backdrop-blur-sm px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 text-sm font-semibold relative z-10"
                   >
                     <span className="material-symbols-outlined text-[18px]">delete</span>
                     Remove
@@ -308,7 +330,7 @@ export default function CustomerOnboarding() {
 
               </div>
             </div>
-          ))}
+          )})}
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-[var(--outline-variant)]">

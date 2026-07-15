@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import TopAppBar from "../../components/TopAppBar";
 import BottomNavBar from "../../components/BottomNavBar";
+import { findMatchingCarImage } from "../../lib/carDatabase";
 
 interface CarDetails {
   id: string;
@@ -95,6 +96,15 @@ export default function CustomerGarage() {
   const displayName = `${car.year} ${car.make} ${car.model}`.trim();
   const plate = car.licensePlate || "—";
 
+  const carImageUrl = findMatchingCarImage({
+    make: car.make,
+    model: car.model,
+    year: car.year,
+    transmission: car.transmission,
+    fuelType: car.fuelType,
+    engine: car.engine
+  });
+
   const specs = [
     { label: "VIN", value: car.vin || "—", icon: "fingerprint" },
     { label: "Engine", value: car.engine || "—", icon: "settings_suggest" },
@@ -125,13 +135,18 @@ export default function CustomerGarage() {
         )}
 
         {/* Vehicle hero card */}
-        <div className="relative rounded-2xl overflow-hidden shadow-level-2 mb-5 mt-4 border border-[var(--outline-variant)] bg-gradient-to-br from-[var(--primary-container)] to-[var(--deep-navy)]">
-          <div className="p-6 text-white flex items-start justify-between gap-4">
+        <div className="relative rounded-2xl overflow-hidden shadow-level-2 mb-5 mt-4 border border-[var(--outline-variant)] bg-[var(--deep-navy)]">
+          {carImageUrl && (
+            <div className="absolute inset-0 opacity-40 mix-blend-screen bg-center bg-cover pointer-events-none" style={{ backgroundImage: `url(${carImageUrl})` }} />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--deep-navy)] to-transparent pointer-events-none" />
+          
+          <div className="relative z-10 p-6 text-white flex items-start justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <span className="material-symbols-outlined text-[var(--secondary)] text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>directions_car</span>
+                {!carImageUrl && <span className="material-symbols-outlined text-[var(--secondary)] text-[28px]" style={{ fontVariationSettings: "'FILL' 1" }}>directions_car</span>}
                 {plate !== "—" && (
-                  <span className="text-xs font-bold text-white/60 uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full">{plate}</span>
+                  <span className="text-xs font-bold text-white/60 uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">{plate}</span>
                 )}
               </div>
               <h2 className="text-3xl font-bold tracking-tight mb-1">
@@ -149,7 +164,7 @@ export default function CustomerGarage() {
           </div>
 
           {/* Health bar */}
-          <div className="px-6 pb-5">
+          <div className="relative z-10 px-6 pb-5">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-white/70 uppercase tracking-wider">Vehicle Health</span>
               <span className="text-xs font-bold text-green-300">
