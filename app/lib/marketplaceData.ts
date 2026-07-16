@@ -441,7 +441,7 @@ export const marketplaceProducts = [
 "price": 135000,
 "stock": 6,
 "compatibleVehicles": ["Toyota Hilux", "Nissan Navara", "Peugeot Landtrek", "Ford Ranger"],
-"imageUrl": "https://placehold.co/600x400/png?text=Exedy+Clutch+Kit"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLcGIF6M3aGrZ7tYT2lTBJEoBaJT8M0vZfX16MAt-9NSm9BsPtjLgfY-Ba&s=10"
 },
 {
 "id": 38,
@@ -453,7 +453,7 @@ export const marketplaceProducts = [
 "price": 72000,
 "stock": 14,
 "compatibleVehicles": ["Volkswagen Golf", "Volkswagen Passat", "BMW 3 Series (330i)"],
-"imageUrl": "https://placehold.co/600x400/png?text=GKN+CV+Axle+Shaft"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkZ_60ofgJqGjGeIRBc2GpS1ka0ECY5PwMIRjb_EMYgg&s"
 },
 {
 "id": 39,
@@ -465,7 +465,7 @@ export const marketplaceProducts = [
 "price": 48000,
 "stock": 32,
 "compatibleVehicles": ["Toyota Highlander", "Lexus RX 350", "Ford Explorer", "Honda Pilot"],
-"imageUrl": "https://placehold.co/600x400/png?text=Timken+Hub+Bearing"
+"imageUrl": "https://m.media-amazon.com/images/I/91dVDDGG9-L._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 40,
@@ -477,7 +477,7 @@ export const marketplaceProducts = [
 "price": 9500,
 "stock": 70,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Lucas+Gear+Oil"
+"imageUrl": "https://www.farmandhomesupply.com/media/catalog/product/6/1/61lripwrbrl._ac_sx679__1.jpg?quality=100&fit=bounds&height=658&width=658&canvas=658:658"
 },
 {
 "id": 41,
@@ -489,7 +489,7 @@ export const marketplaceProducts = [
 "price": 19000,
 "stock": 140,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Philips+H7+Headlight+Bulbs"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaG-nPKxWPhvvNWAIpz59JqoKa3qgpXt8IasTIicbP7Yyb2py5FdVbFak&s=10"
 },
 {
 "id": 42,
@@ -501,7 +501,7 @@ export const marketplaceProducts = [
 "price": 12500,
 "stock": 88,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Sylvania+LED+Tail+Light"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDyaESX_6ZixMLjvyS7ajVAOsroZhkNKzzseWfUAN1j21tqLmzmfky5A0&s=10"
 },
 {
 "id": 43,
@@ -513,7 +513,7 @@ export const marketplaceProducts = [
 "price": 54000,
 "stock": 19,
 "compatibleVehicles": ["Toyota Camry", "Honda Accord", "Nissan Altima", "Hyundai Sonata"],
-"imageUrl": "https://placehold.co/600x400/png?text=Fel-Pro+Head+Gasket"
+"imageUrl": "https://m.media-amazon.com/images/I/71Dj-K8ok8L.jpg"
 },
 {
 "id": 44,
@@ -525,7 +525,7 @@ export const marketplaceProducts = [
 "price": 18000,
 "stock": 35,
 "compatibleVehicles": ["BMW 3 Series (330i)", "BMW 5 Series (530i)", "Mercedes-Benz C-Class (C300)"],
-"imageUrl": "https://placehold.co/600x400/png?text=Victor+Reinz+Gasket"
+"imageUrl": "https://m.media-amazon.com/images/I/31FDIO-4DlL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 45,
@@ -537,7 +537,7 @@ export const marketplaceProducts = [
 "price": 165000,
 "stock": 5,
 "compatibleVehicles": ["Toyota Camry", "Toyota Corolla", "Honda Accord", "Honda Civic"],
-"imageUrl": "https://placehold.co/600x400/png?text=Walker+Catalytic+Converter"
+"imageUrl": "https://m.media-amazon.com/images/I/51PKREh5sDL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 46,
@@ -549,7 +549,7 @@ export const marketplaceProducts = [
 "price": 195000,
 "stock": 6,
 "compatibleVehicles": ["Toyota Camry", "Toyota Corolla", "Honda Accord", "Nissan Altima"],
-"imageUrl": "https://placehold.co/600x400/png?text=Sensen+Strut+Set"
+"imageUrl": "https://m.media-amazon.com/images/I/511FYdNHxiL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 47,
@@ -561,7 +561,7 @@ export const marketplaceProducts = [
 "price": 145000,
 "stock": 11,
 "compatibleVehicles": ["Toyota Camry", "Toyota Corolla", "Toyota Highlander", "Lexus RX 350"],
-"imageUrl": "https://placehold.co/600x400/png?text=Denso+AC+Compressor"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjjre8s1Y9ViJBE4fm-k82X29EKiqAIDbbWn8n-WVjnUGlLpDzkdnaB8Q&s=10"
 },
 {
 "id": 48,
@@ -573,7 +573,7 @@ export const marketplaceProducts = [
 "price": 45000,
 "stock": 25,
 "compatibleVehicles": ["Toyota Corolla", "Honda Civic", "Hyundai Elantra", "Kia Cerato"],
-"imageUrl": "https://placehold.co/600x400/png?text=UAC+AC+Condenser"
+"imageUrl": "https://images-na.ssl-images-amazon.com/images/I/81Yi0J2moCL._AC_UL495_SR435,495_.jpg"
 },
 {
 "id": 49,
@@ -585,7 +585,7 @@ export const marketplaceProducts = [
 "price": 18500,
 "stock": 40,
 "compatibleVehicles": ["Mercedes-Benz C-Class (C300)", "BMW 3 Series (330i)", "Volkswagen Jetta"],
-"imageUrl": "https://placehold.co/600x400/png?text=Bosch+Fuel+Filter"
+"imageUrl": "https://m.media-amazon.com/images/I/71Y4PQNgumL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 50,
@@ -597,7 +597,7 @@ export const marketplaceProducts = [
 "price": 85000,
 "stock": 12,
 "compatibleVehicles": ["Toyota Camry", "Toyota Corolla", "Lexus RX 350"],
-"imageUrl": "https://placehold.co/600x400/png?text=KYB+Strut+Assembly"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjCHvqfQ6svki3eVM_JLhMV2InliOC9-1XSNu5gQGKIZ5yVWCTCuM-5i4&s=10"
 },
 {
 "id": 51,
@@ -609,7 +609,7 @@ export const marketplaceProducts = [
 "price": 32000,
 "stock": 35,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=LAUNCH+Creader+3001"
+"imageUrl": "https://m.media-amazon.com/images/I/81KodmZ7KZL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 52,
@@ -621,7 +621,7 @@ export const marketplaceProducts = [
 "price": 28000,
 "stock": 50,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Ancel+Code+Reader"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKbdUUtjN72j4bFODcQHtYajAms75UszJSqaiU9_s1Vuxdwwia-sbugtE&s=10"
 },
 {
 "id": 53,
@@ -633,7 +633,7 @@ export const marketplaceProducts = [
 "price": 345000,
 "stock": 4,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Autel+MaxiCOM+MK808"
+"imageUrl": "https://m.media-amazon.com/images/I/81+bYtb6gbL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 54,
@@ -645,7 +645,7 @@ export const marketplaceProducts = [
 "price": 68000,
 "stock": 22,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Torin+3-Ton+Floor+Jack"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDWTtaxpLspkfx1UrCudXgJfwRzti0R84Hk_tePwBGjg&s"
 },
 {
 "id": 55,
@@ -657,7 +657,7 @@ export const marketplaceProducts = [
 "price": 34000,
 "stock": 45,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Torin+Jack+Stands+Pair"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKawzvcf81GAwJDcXs2IIn_oO-XEhpC405DjwMyjPgkA&s"
 },
 {
 "id": 56,
@@ -669,7 +669,7 @@ export const marketplaceProducts = [
 "price": 45000,
 "stock": 30,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=WORKPRO+Socket+Set"
+"imageUrl": "https://m.media-amazon.com/images/I/71QRdk6-eIL._AC_SL1500_.jpg"
 },
 {
 "id": 57,
@@ -681,7 +681,7 @@ export const marketplaceProducts = [
 "price": 28000,
 "stock": 25,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=EPAuto+Torque+Wrench"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIh-xponQ7-5CGn9w7ENG_wSILYdzXFp_qTpWOgrULWPXelzqD40V8tNo&s=10"
 },
 {
 "id": 58,
@@ -693,7 +693,7 @@ export const marketplaceProducts = [
 "price": 14500,
 "stock": 65,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=AstroAI+Tire+Gauge"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzms603UGCuArNyfXhLdP91sA9c1ugLt6Iw3sA64a9j-6uWueypyQ5kC8D&s=10"
 },
 {
 "id": 59,
@@ -705,7 +705,7 @@ export const marketplaceProducts = [
 "price": 38000,
 "stock": 40,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Craftsman+Wrench+Set"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHwTPCtsV0__bWM8gzgJ8QJzgn8yDU184dte4U8INB6mTtm1L9BALt3c6Y&s=10"
 },
 {
 "id": 60,
@@ -717,7 +717,7 @@ export const marketplaceProducts = [
 "price": 16500,
 "stock": 120,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Cartman+Jumper+Cables"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbEiTemZja0EF6gZ8VsE6S9-YVKoMiiF0B4Q_ZfwA9xog6q2F20JfzOss&s=10"
 },
 {
 "id": 61,
@@ -729,7 +729,7 @@ export const marketplaceProducts = [
 "price": 95000,
 "stock": 28,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=NOCO+GB40+Jump+Starter"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjSrZIxBpPygz6fV26FyQRqkZTo4ikLhpiBCizOStdoA&s"
 },
 {
 "id": 62,
@@ -741,7 +741,7 @@ export const marketplaceProducts = [
 "price": 74000,
 "stock": 35,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=70mai+A500S+Dash+Cam"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4-wM3eoW82zmpa6VwrVGpcjUr1v379PAKKR2n0YeWX2UZILGAEDqV033w&s=10"
 },
 {
 "id": 63,
@@ -753,7 +753,7 @@ export const marketplaceProducts = [
 "price": 185000,
 "stock": 10,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Vantrue+N4+Dash+Cam"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRWEiHHhoQhJFu2IodbOrudMLlT9z766lNBTc8COi5lYDya1_GqMPmHYM&s=10"
 },
 {
 "id": 64,
@@ -765,7 +765,7 @@ export const marketplaceProducts = [
 "price": 6500,
 "stock": 250,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Yantek+Car+Charger"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6xDB7LXkYGwbF0I7-iE6vz6lKBeKOFz4kQ55yCpxKREFGbMymmVLGVWOF&s=10"
 },
 {
 "id": 65,
@@ -777,7 +777,7 @@ export const marketplaceProducts = [
 "price": 8500,
 "stock": 190,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Baseus+Magnetic+Mount"
+"imageUrl": "https://baseusonline.com/uploads/img/pi/172/172319038926/1723190389.jpg"
 },
 {
 "id": 66,
@@ -789,7 +789,7 @@ export const marketplaceProducts = [
 "price": 18000,
 "stock": 70,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=iOttie+Dashboard+Mount"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWWbJGF-PYTgypdjFRMu5NKusasNXkKD1e9n6_hgP1Jg&s"
 },
 {
 "id": 67,
@@ -801,7 +801,7 @@ export const marketplaceProducts = [
 "price": 16000,
 "stock": 80,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=FH+Group+Floor+Mats"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQ3aQqNHoHCtPNIf6J_wJm5vRoKvnR8JtUHW9EC-4utCqiUXsjQdnHscA&s=10"
 },
 {
 "id": 68,
@@ -813,7 +813,7 @@ export const marketplaceProducts = [
 "price": 28000,
 "stock": 45,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Motor+Trend+Rubber+Mats"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFqIrmlQRPwpzEVHgNvaaYLjpJaEnGfnPCxklV2TLAJRj2bJ1HQSAWUE4&s=10"
 },
 {
 "id": 69,
@@ -825,7 +825,7 @@ export const marketplaceProducts = [
 "price": 25000,
 "stock": 60,
 "compatibleVehicles": ["Toyota Camry", "Toyota Corolla", "Honda Accord", "Nissan Altima"],
-"imageUrl": "https://placehold.co/600x400/png?text=Breathable+Car+Cover"
+"imageUrl": "https://m.media-amazon.com/images/I/71RVo7PF4cL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 70,
@@ -837,7 +837,7 @@ export const marketplaceProducts = [
 "price": 42000,
 "stock": 35,
 "compatibleVehicles": ["Toyota Highlander", "Lexus RX 350", "Ford Explorer", "Honda CR-V"],
-"imageUrl": "https://placehold.co/600x400/png?text=Kayme+Waterproof+Cover"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMpUvf6iNw1aIH9r7L_TCIIUwZZRB57eo_CI4PntsA0w&s"
 },
 {
 "id": 71,
@@ -849,7 +849,7 @@ export const marketplaceProducts = [
 "price": 3500,
 "stock": 140,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Windex+Washer+Fluid"
+"imageUrl": "https://m.media-amazon.com/images/I/71f6+KlvLhL.jpg"
 },
 {
 "id": 72,
@@ -861,7 +861,7 @@ export const marketplaceProducts = [
 "price": 6000,
 "stock": 180,
 "compatibleVehicles": ["Toyota Camry", "Toyota Corolla", "Toyota Highlander", "Lexus RX 350"],
-"imageUrl": "https://placehold.co/600x400/png?text=Denso+Cabin+Filter"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlgEoNgayn8mfQcAyLZNe6grWcnfsr-wcfUdU_AVVxWmzijh3ICdREGxY&s=10"
 },
 {
 "id": 73,
@@ -873,7 +873,7 @@ export const marketplaceProducts = [
 "price": 12000,
 "stock": 48,
 "compatibleVehicles": ["Subaru Forester", "Subaru Outback"],
-"imageUrl": "https://placehold.co/600x400/png?text=Subaru+ATF+Fluid"
+"imageUrl": "https://m.media-amazon.com/images/I/31K9PsywnRL._AC_US400_.jpg"
 },
 {
 "id": 74,
@@ -885,7 +885,7 @@ export const marketplaceProducts = [
 "price": 8500,
 "stock": 95,
 "compatibleVehicles": ["Ford F-150", "Ford Explorer", "Ford Escape", "Ford Edge"],
-"imageUrl": "https://placehold.co/600x400/png?text=Mercon+LV+ATF"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNt5Wkj_cY9plXJYVHMRDF4WcLTTjOlR4K83Jxi2xMMA&s"
 },
 {
 "id": 75,
@@ -897,7 +897,7 @@ export const marketplaceProducts = [
 "price": 14000,
 "stock": 60,
 "compatibleVehicles": ["Honda Accord", "Honda Civic", "Honda CR-V", "Honda HR-V"],
-"imageUrl": "https://placehold.co/600x400/png?text=Honda+HCF-2+CVT+Fluid"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB9Kc73yjAfRRwVWpBOSeIEJtGPeqKqyLrBbQIQ2x8RQ&s"
 },
 {
 "id": 76,
@@ -909,7 +909,7 @@ export const marketplaceProducts = [
 "price": 45000,
 "stock": 15,
 "compatibleVehicles": ["Toyota Camry", "Honda Accord", "Nissan Altima"],
-"imageUrl": "https://placehold.co/600x400/png?text=Dayco+Timing+Belt+Gasket"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVBSAQEerXNyPbhQqfUoMz9Tz1CjkP6o9wP_loGYwGUQly2onhQJSvd7p2&s=10"
 },
 {
 "id": 77,
@@ -921,7 +921,7 @@ export const marketplaceProducts = [
 "price": 5500,
 "stock": 110,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=STP+Oil+Treatment"
+"imageUrl": "https://i5.walmartimages.com/seo/STP-Oil-Treatment-15-oz-12-Pack_4d12cce6-2398-4a0f-885b-1d80d892bdf8.939af38fc55ab637859edb59319a73ec.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF"
 },
 {
 "id": 78,
@@ -933,7 +933,7 @@ export const marketplaceProducts = [
 "price": 8500,
 "stock": 150,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Sea+Foam+Motor+Treatment"
+"imageUrl": "https://m.media-amazon.com/images/I/71KAvXnJNEL._AC_UF1000,1000_QL80_.jpg"
 },
 {
 "id": 79,
@@ -945,7 +945,7 @@ export const marketplaceProducts = [
 "price": 9000,
 "stock": 120,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Chevron+Techron+Cleaner"
+"imageUrl": "https://m.media-amazon.com/images/I/71NVX03sYbL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 80,
@@ -957,7 +957,7 @@ export const marketplaceProducts = [
 "price": 14000,
 "stock": 85,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Prestone+Yellow+Coolant"
+"imageUrl": "https://m.media-amazon.com/images/I/71sToxb9ynL.jpg_BO30,255,255,255_UF750,750_SR1910,1000,0,C_QL100_.jpg"
 },
 {
 "id": 81,
@@ -969,7 +969,7 @@ export const marketplaceProducts = [
 "price": 4000,
 "stock": 130,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=STP+Power+Steering+Fluid"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZVC8rYyL3lQUVuDpw6TCjYzLM6YLjM6Pkw3e64lhxjMyr91exmC4TmqbS&s=10"
 },
 {
 "id": 82,
@@ -981,7 +981,7 @@ export const marketplaceProducts = [
 "price": 165000,
 "stock": 6,
 "compatibleVehicles": ["Ford F-150", "Ford Explorer", "Ford Expedition"],
-"imageUrl": "https://placehold.co/600x400/png?text=Motorcraft+Alternator"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTesVAvkkHl_C3DhESnkl8UmWGSjaKGQqQkh7p8GgA8Iw&s"
 },
 {
 "id": 83,
@@ -993,7 +993,7 @@ export const marketplaceProducts = [
 "price": 35000,
 "stock": 24,
 "compatibleVehicles": ["BMW 3 Series (330i)", "BMW 5 Series (540i)", "BMW X3", "BMW X5"],
-"imageUrl": "https://placehold.co/600x400/png?text=BMW+Genuine+Ignition+Coil"
+"imageUrl": "https://m.media-amazon.com/images/I/61ebczEyaNL.jpg"
 },
 {
 "id": 84,
@@ -1005,7 +1005,7 @@ export const marketplaceProducts = [
 "price": 4500,
 "stock": 310,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=WD-40+Smart+Straw"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCaRhltOLMmlWWLVRihfubXbz56dEM8uU3c5K8t95ToSdQZATNt9C55EA&s=10"
 },
 {
 "id": 85,
@@ -1017,7 +1017,7 @@ export const marketplaceProducts = [
 "price": 18000,
 "stock": 42,
 "compatibleVehicles": ["Toyota Camry", "Honda Accord", "Nissan Altima", "Hyundai Sonata"],
-"imageUrl": "https://placehold.co/600x400/png?text=Monroe+Trunk+Supports"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaW7s0Kf5JMq3U_bly5K91S2xoSlWGG3NCegvm_Yxh0zy11IZDCxYF6CpZ&s=10"
 },
 {
 "id": 86,
@@ -1029,7 +1029,7 @@ export const marketplaceProducts = [
 "price": 8500,
 "stock": 68,
 "compatibleVehicles": ["Toyota Camry", "Toyota Corolla", "Honda Accord", "Nissan Sentra"],
-"imageUrl": "https://placehold.co/600x400/png?text=Moog+Stabilizer+Bushings"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTHcz7qqBmACQO8IBeffkrxHWUd70ZMRZQup2dEUEQj_w1ODLpxIuJSWJJ&s=10"
 },
 {
 "id": 87,
@@ -1041,7 +1041,7 @@ export const marketplaceProducts = [
 "price": 5000,
 "stock": 250,
 "compatibleVehicles": ["Toyota Camry", "Honda Accord", "Ford Explorer", "Hyundai Tucson"],
-"imageUrl": "https://placehold.co/600x400/png?text=Wix+Oil+Filter"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPO4nKRb5kuWn_8pVleY1lBazQPQWcuXKdJRl-aZpiwSdMdHsznUH2yas&s=10"
 },
 {
 "id": 88,
@@ -1053,7 +1053,7 @@ export const marketplaceProducts = [
 "price": 58000,
 "stock": 12,
 "compatibleVehicles": ["Ford Mustang", "Toyota Camry", "Honda Civic"],
-"imageUrl": "https://placehold.co/600x400/png?text=HKS+Super+Intake+Filter"
+"imageUrl": "https://m.media-amazon.com/images/I/81VTKNAaWeL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 89,
@@ -1065,7 +1065,7 @@ export const marketplaceProducts = [
 "price": 38000,
 "stock": 35,
 "compatibleVehicles": ["Toyota Camry", "Toyota Corolla", "Honda Accord", "Ford F-150"],
-"imageUrl": "https://placehold.co/600x400/png?text=K%26N+Lifetime+Air+Filter"
+"imageUrl": "https://m.media-amazon.com/images/I/81aH6LHxaSL.jpg"
 },
 {
 "id": 90,
@@ -1077,7 +1077,7 @@ export const marketplaceProducts = [
 "price": 145000,
 "stock": 8,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Ancel+FX2000+Scanner"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjNheeav9aC96aNRximogYWqEvr2OhPBap7niJgc97sA&s"
 },
 {
 "id": 91,
@@ -1089,7 +1089,7 @@ export const marketplaceProducts = [
 "price": 285000,
 "stock": 3,
 "compatibleVehicles": ["Ford Mustang", "Ford F-150", "Toyota Land Cruiser"],
-"imageUrl": "https://placehold.co/600x400/png?text=K%26N+Cold+Air+Intake"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDcLBI8LHu1Kh6WyRayVxN21ytzeUBnzq_YsaDXcwt3roxaN674p-Ry7Q&s=10"
 },
 {
 "id": 92,
@@ -1101,7 +1101,7 @@ export const marketplaceProducts = [
 "price": 18000,
 "stock": 15,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Gates+Belt+Installation+Tool"
+"imageUrl": "https://m.media-amazon.com/images/I/81aIIBUJKWL.jpg"
 },
 {
 "id": 93,
@@ -1113,7 +1113,7 @@ export const marketplaceProducts = [
 "price": 25000,
 "stock": 20,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Fluid+Extraction+Pump"
+"imageUrl": "https://m.media-amazon.com/images/I/71tfO-oR3NL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 94,
@@ -1125,7 +1125,7 @@ export const marketplaceProducts = [
 "price": 68000,
 "stock": 30,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Leatherette+Seat+Covers"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-V7SeovRkWmMlYPOMX58n8CaESuFzZrh_-NDDP4HdBRSDb9JEIJYNo28&s=10"
 },
 {
 "id": 95,
@@ -1137,7 +1137,7 @@ export const marketplaceProducts = [
 "price": 11000,
 "stock": 140,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Brembo+DOT+4+Fluid"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtB1fWLCMORyC852MMsWF1F30vcJMMrbF1bn5559wrkerCf24GBSCnGNU&s=10"
 },
 {
 "id": 96,
@@ -1149,7 +1149,7 @@ export const marketplaceProducts = [
 "price": 4500,
 "stock": 190,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Abro+Engine+Degreaser"
+"imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq5dX4YCBHW1ZUM5OsvZX33VWrVxBj9TwINsVf_iga5g&s"
 },
 {
 "id": 97,
@@ -1161,7 +1161,7 @@ export const marketplaceProducts = [
 "price": 5000,
 "stock": 160,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=Liquid+Wrench+Spray"
+"imageUrl": "https://m.media-amazon.com/images/I/71Haif00biL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 98,
@@ -1173,7 +1173,7 @@ export const marketplaceProducts = [
 "price": 19500,
 "stock": 55,
 "compatibleVehicles": ["Toyota Camry", "Honda Accord", "Toyota Highlander", "Lexus RX 350"],
-"imageUrl": "https://placehold.co/600x400/png?text=Trunk+Cargo+Liner"
+"imageUrl": "https://m.media-amazon.com/images/I/81V3GQbf7xL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 99,
@@ -1185,7 +1185,7 @@ export const marketplaceProducts = [
 "price": 28000,
 "stock": 70,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=EPAuto+Tire+Inflator"
+"imageUrl": "https://m.media-amazon.com/images/I/81W+7QvYtLL._AC_UF894,1000_QL80_.jpg"
 },
 {
 "id": 100,
@@ -1197,6 +1197,6 @@ export const marketplaceProducts = [
 "price": 7500,
 "stock": 130,
 "compatibleVehicles": ["Universal"],
-"imageUrl": "https://placehold.co/600x400/png?text=STP+Fuel+System+Treatment"
+"imageUrl": "https://m.media-amazon.com/images/I/61Yls5C385L._AC_UF350,350_QL80_.jpg"
 }
 ];

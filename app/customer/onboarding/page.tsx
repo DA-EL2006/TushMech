@@ -80,18 +80,26 @@ export default function CustomerOnboarding() {
     e.preventDefault();
     setLoading(true);
     try {
-      // 1. Register User
+      // 1. Try to Register User
       const regRes = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...profile, role: "CUSTOMER" }),
       });
       
+      let isReturningUser = false;
+      
       if (!regRes.ok) {
         const error = await regRes.json();
-        alert(`Registration failed: ${error.message}${error.details ? ' - ' + error.details : ''}`);
-        setLoading(false);
-        return;
+        
+        // If email or phone already exists, they are a returning user
+        if (error.message === "Email already exists" || error.message.includes("already registered")) {
+          isReturningUser = true;
+        } else {
+          alert(`Registration failed: ${error.message}${error.details ? ' - ' + error.details : ''}`);
+          setLoading(false);
+          return;
+        }
       }
 
       // 2. Log in User
@@ -102,12 +110,21 @@ export default function CustomerOnboarding() {
       });
 
       if (signInRes?.error) {
-        alert("Failed to sign in after registration.");
+        alert(isReturningUser ? "Account exists, but incorrect password provided. Please try again." : "Failed to sign in after registration.");
         setLoading(false);
         return;
       }
 
-      // 3. Save Vehicles
+      // If they are just logging back in, skip adding their vehicles again from the form 
+      // (unless they explicitly added one, but for UX let's just take them to the dashboard)
+      if (isReturningUser) {
+        localStorage.removeItem("tushmech_customer_draft_profile");
+        localStorage.removeItem("tushmech_customer_draft_cars");
+        router.push("/customer/dashboard");
+        return;
+      }
+
+      // 3. Save Vehicles (for new users)
       for (const car of cars) {
         if (!car.make || !car.model) continue;
         const vehicleRes = await fetch("/api/vehicles", {
@@ -238,15 +255,15 @@ export default function CustomerOnboarding() {
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Make</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Make *</label>
                       <input type="text" required value={car.make} onChange={e => updateCar(car.id, 'make', e.target.value)} placeholder="e.g. Toyota" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Model</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Model *</label>
                       <input type="text" required value={car.model} onChange={e => updateCar(car.id, 'model', e.target.value)} placeholder="e.g. Camry" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Year</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Year *</label>
                       <input type="number" required value={car.year} onChange={e => updateCar(car.id, 'year', e.target.value)} placeholder="e.g. 2018" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
                     </div>
                   </div>
@@ -259,16 +276,16 @@ export default function CustomerOnboarding() {
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">VIN (Vehicle Identification Number) *</label>
-                      <input type="text" required value={car.vin} onChange={e => updateCar(car.id, 'vin', e.target.value)} placeholder="17-character VIN" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)] uppercase" maxLength={17} />
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">VIN (Vehicle Identification Number) (Optional)</label>
+                      <input type="text" value={car.vin} onChange={e => updateCar(car.id, 'vin', e.target.value)} placeholder="17-character VIN" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)] uppercase" />
                       <p className="text-xs text-[var(--on-surface-variant)] mt-1">Crucial for exact OEM part matching.</p>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Engine</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Engine (Optional)</label>
                       <input type="text" value={car.engine} onChange={e => updateCar(car.id, 'engine', e.target.value)} placeholder="e.g. 2.5L 4-Cyl" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Fuel Type</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Fuel Type (Optional)</label>
                       <select value={car.fuelType} onChange={e => updateCar(car.id, 'fuelType', e.target.value)} className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]">
                         <option value="">Select...</option>
                         <option value="Petrol">Petrol</option>
@@ -278,7 +295,7 @@ export default function CustomerOnboarding() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Transmission</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Transmission (Optional)</label>
                       <select value={car.transmission} onChange={e => updateCar(car.id, 'transmission', e.target.value)} className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]">
                         <option value="">Select...</option>
                         <option value="Automatic">Automatic</option>
@@ -288,7 +305,7 @@ export default function CustomerOnboarding() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Drivetrain</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Drivetrain (Optional)</label>
                       <select value={car.drivetrain} onChange={e => updateCar(car.id, 'drivetrain', e.target.value)} className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]">
                         <option value="">Select...</option>
                         <option value="FWD">Front-Wheel Drive (FWD)</option>
@@ -298,14 +315,14 @@ export default function CustomerOnboarding() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Current Mileage</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Current Mileage (Optional)</label>
                       <div className="relative">
-                        <input type="number" required value={car.mileage} onChange={e => updateCar(car.id, 'mileage', e.target.value)} placeholder="e.g. 65000" className="w-full h-12 px-4 pr-12 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
+                        <input type="number" value={car.mileage} onChange={e => updateCar(car.id, 'mileage', e.target.value)} placeholder="e.g. 65000" className="w-full h-12 px-4 pr-12 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-[var(--on-surface-variant)] font-medium">km</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Color</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Color (Optional)</label>
                       <input type="text" value={car.color} onChange={e => updateCar(car.id, 'color', e.target.value)} placeholder="e.g. Midnight Blue" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)]" />
                     </div>
                   </div>
@@ -318,11 +335,11 @@ export default function CustomerOnboarding() {
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">License Plate Number</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">License Plate Number (Optional)</label>
                       <input type="text" value={car.licensePlate} onChange={e => updateCar(car.id, 'licensePlate', e.target.value)} placeholder="e.g. ABC-1234" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)] uppercase" />
                     </div>
                     <div className="md:row-span-2">
-                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Current Issues / Dashboard Lights</label>
+                      <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Current Issues / Dashboard Lights (Optional)</label>
                       <textarea value={car.knownIssues} onChange={e => updateCar(car.id, 'knownIssues', e.target.value)} placeholder="e.g. Check engine light is on, hearing a squeaking noise when braking..." className="w-full h-32 px-4 py-3 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--secondary)] focus:ring-1 focus:ring-[var(--secondary)] outline-none transition-all text-sm bg-[var(--surface)] resize-none" />
                     </div>
                   </div>

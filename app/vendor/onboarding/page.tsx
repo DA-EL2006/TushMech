@@ -177,7 +177,7 @@ export default function VendorOnboarding() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-[var(--primary)] mb-1">
-                    Tax Identification Number (TIN)
+                    Tax Identification Number (TIN) (Optional)
                   </label>
                   <input
                     type="text"
@@ -264,7 +264,7 @@ export default function VendorOnboarding() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-[var(--primary)] mb-1">
-                    Product Categories
+                    Product Categories (Optional)
                   </label>
                   <input
                     type="text"

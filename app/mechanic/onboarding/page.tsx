@@ -54,11 +54,18 @@ export default function MechanicOnboarding() {
         }),
       });
 
+      let isReturningUser = false;
+
       if (!regRes.ok) {
         const error = await regRes.json();
-        alert(`Registration failed: ${error.message}`);
-        setLoading(false);
-        return;
+        
+        if (error.message === "Email already exists" || error.message.includes("already registered")) {
+          isReturningUser = true;
+        } else {
+          alert(`Registration failed: ${error.message}`);
+          setLoading(false);
+          return;
+        }
       }
 
       const signInRes = await signIn("credentials", {
@@ -68,8 +75,15 @@ export default function MechanicOnboarding() {
       });
 
       if (signInRes?.error) {
-        alert("Failed to sign in after registration.");
+        alert(isReturningUser ? "Account exists, but incorrect password provided. Please try again." : "Failed to sign in after registration.");
         setLoading(false);
+        return;
+      }
+
+      // If returning user, skip saving profile data again to avoid overwriting real data with drafts
+      if (isReturningUser) {
+        localStorage.removeItem("tushmech_mechanic_draft");
+        router.push("/mechanic/dashboard");
         return;
       }
 

@@ -153,7 +153,7 @@ export default function AdminOnboarding() {
                   <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="+234 800 000 0000" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--deep-navy)] focus:ring-1 focus:ring-[var(--deep-navy)] outline-none transition-all text-sm bg-[var(--surface)]" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Emergency Contact</label>
+                  <label className="block text-sm font-semibold text-[var(--primary)] mb-1">Emergency Contact (Optional)</label>
                   <input type="tel" name="emergencyContact" value={formData.emergencyContact} onChange={handleChange} placeholder="+234 800 000 0000" className="w-full h-12 px-4 rounded-lg border border-[var(--outline-variant)] focus:border-[var(--deep-navy)] focus:ring-1 focus:ring-[var(--deep-navy)] outline-none transition-all text-sm bg-[var(--surface)]" />
                 </div>
               </div>
